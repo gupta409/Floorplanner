@@ -7,8 +7,15 @@
 #pragma once
 class Size{
 private:
-	float length;
-	float width;
+	double length;
+	double width;
+public:
+	Size();
+	Size(double length, double width);
+	double getLength() const;
+	void setLength(double length);
+	double getWidth() const;
+	void setWidth(double width);
 };
 
 
