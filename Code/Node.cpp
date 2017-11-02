@@ -14,10 +14,9 @@ Node::Node(const std::string& id, double softArea, double softMinAspect, double 
 	this->parent = NULL;
 	this->left = NULL;
 	this->right = NULL;
-	cout<<"\nSoft Node Made\n";
 }
 //Constructor to make hard blocks
-Node::Node(const string& id, set<Size>& sizeOptions){
+Node::Node(const string& id, list<Size>& sizeOptions){
 	this->id = id;
 	this->nodeType = HARD;
 	this->cutType = END_NODE;
@@ -28,7 +27,6 @@ Node::Node(const string& id, set<Size>& sizeOptions){
 	this->softArea = 0;
 	this->softMinAspect = 0;
 	this->softMaxAspect = 0;
-	cout<<"\nHard Node Made\n";
 }
 //Constructor to make nodes with cut specification
 Node::Node(int cutType, Node* left, Node* right){
@@ -64,7 +62,6 @@ Node::Node(int cutType, Node* left, Node* right){
 	this->softMinAspect = 0;
 	this->softMaxAspect = 0;
 	this->nodeType = HARD;
-	cout<<"\nBasic Node made\n";
 }
 
 int Node::getCutType() const {
@@ -84,7 +81,7 @@ const Size& Node::getOptimumSize() const {
 	return optimumSize;
 }
 
-void Node::setOptimumSize(const Size& optimumSize) {
+void Node::setOptimumSize(Size& optimumSize) {
 	this->optimumSize = optimumSize;
 }
 
@@ -96,7 +93,7 @@ const Node* Node::getRight() const {
 	return right;
 }
 
-const set<Size>& Node::getSizeOptions() const {
+list<Size>& Node::getSizeOptions() {
 	return sizeOptions;
 }
 

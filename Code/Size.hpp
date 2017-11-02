@@ -7,8 +7,8 @@
 #pragma once
 class Size{
 private:
-	double length;
-	double width;
+	double length;	//x2-x1
+	double width;	//y2-y1
 public:
 	Size();
 	Size(double length, double width);

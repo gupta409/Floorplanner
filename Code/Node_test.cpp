@@ -10,7 +10,7 @@ using namespace std;
 void nodeUnitTest(){
 	Node n("hard1",2.5,3.5,40);
 	Size s1;
-	set<Size> sizeops;
+	list<Size> sizeops;
 	Node n1("soft1",sizeops);
 	Node top((int)Node::HORIZONTAL_CUT,&n,&n1);
 	Node top1((int)Node::VERTICAL_CUT,&n,&n1);

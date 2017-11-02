@@ -10,8 +10,9 @@
 using namespace std;
 
 int main(){
-	nodeUnitTest();
+	//nodeUnitTest();
 	floorplannerUnitTest();
+	return 0;
 }
 
 
