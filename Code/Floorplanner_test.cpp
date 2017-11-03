@@ -24,7 +24,7 @@ void floorplannerUnitTest(){
 	nodes.push_back(n3);
 	nodes.push_back(n4);
 	for(auto it:nodes){
-		//cout<<it.getId()<<"\t"<<" Length:"<<it.getSizeOptions().front().getLength()<<" Width:"<<it.getSizeOptions().front().getWidth()<<endl;
+		cout<<it.getId()<<"\t"<<" Length:"<<it.getSizeOptions().front().getLength()<<" Width:"<<it.getSizeOptions().front().getWidth()<<endl;
 	}
 	Floorplanner floorplanner1(nodes);
 	//floorplanner1.printNodes();

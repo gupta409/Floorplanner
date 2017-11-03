@@ -102,15 +102,21 @@ Node* Floorplanner::polishToTree(const vector<string>& experssion) {
 		cout<<"Invalid Expression";
 		top = NULL;
 	}else{
-		top = nodes.find(polishStack.top())->second;
-		polishStack.pop();
+		if(isValid){
+			top = nodes.find(polishStack.top())->second;
+			polishStack.pop();
+		}else{
+			//TODO: Trow exception
+			cout<<"Invalid Expression";
+			top = NULL;
+		}
 	}
 	return top;
 }
 //Traverses the tree and gives total area of the floorplan. Returns: Total Area
-double Floorplanner::computeCost(const Node& root) {
+double Floorplanner::computeCost(Node* root) {
 	double cost = 0;
-	cost = root.getOptimumSize().getLength()*root.getOptimumSize().getWidth();
+	cost = root->getOptimumSize().getLength()*root->getOptimumSize().getWidth();
 	return cost;
 }
 //Returns: True/False
@@ -137,16 +143,50 @@ Floorplanner::Floorplanner(list<Node>& nodes) {
 }
 void Floorplanner::floorplan() {
 	//TODO: Write Simulated Annealing code here
+	vector<string> expression = generateInitialExpression();
+	printExpression(expression);
+	Node* root = sizeNodes(*nodes.find("hard4")->second,*nodes.find("hard3")->second,Node::VERTICAL_CUT);
+	//Node* root = polishToTree(expression);
+	//cout<<"\nArea:\t"<<computeCost(root);
 }
 void Floorplanner::printNodes(){
 	for(auto it = this->nodes.begin(); it != this->nodes.end(); ++it){
 		cout<<"ID:\t"<<it->first<<" Length:\t"<<it->second->getOptimumSize().getLength()<<" Width:\t"<<it->second->getOptimumSize().getWidth()<<endl;
 	}
 }
-//Function currently generates initial expression of the form AB|C-D|E-F|
+//Function currently generates initial expression of the form AB|C-D|E-F|G|
 vector<string> Floorplanner::generateInitialExpression(){
 	vector<string> expression;
-	for(auto it = nodes.begin(); it!=nodes.end();++it){
-
+	auto it = nodes.begin();
+	if(nodes.size()>=2){
+		expression.push_back(it->second->getId());
+		++it;
+		expression.push_back(it->second->getId());
+		expression.push_back(PolishUtilities::VERTICAL_CUT);
+	}else{
+		//TODO: Throw error
+		cout<<"Too few nodes in floorplan";
+		//FIXME: Handle error and give output as same node itself
 	}
+	int i = 0;
+	if(nodes.size()>2){
+		++it;
+		for(; it!=nodes.end();++it, i++){
+			//TODO: Re-check if second node is not getting added twice
+			expression.push_back(it->second->getId());
+			if(i%2==0){
+				expression.push_back(PolishUtilities::VERTICAL_CUT);
+			}else{
+				expression.push_back(PolishUtilities::HORIZONTAL_CUT);
+			}
+		}
+	}
+
+	return expression;
+}
+void Floorplanner::printExpression(const vector<string>& expression){
+	for(auto it = expression.begin();it!=expression.end();++it){
+		cout<<*it;
+	}
+	cout<<endl;
 }

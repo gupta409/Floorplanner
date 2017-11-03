@@ -11,8 +11,8 @@
 using namespace std;
 int main(){
 	//nodeUnitTest();
-	//floorplannerUnitTest();
-	polishUtilitesUnitTest();
+	floorplannerUnitTest();
+	//polishUtilitesUnitTest();
 	return 0;
 }
 
