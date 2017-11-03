@@ -23,29 +23,26 @@ Node* Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
 		nodeB.setOptimumSize(defaultSize);
 	}
 	if(cutType == Node::HORIZONTAL_CUT){
-		Node n1(Node::HORIZONTAL_CUT, &nodeA, &nodeB);
+		parent = new Node(Node::HORIZONTAL_CUT, &nodeA, &nodeB);
 		double length = max(nodeA.getOptimumSize().getLength(),nodeB.getOptimumSize().getLength());
 		double width = nodeA.getOptimumSize().getWidth()+nodeB.getOptimumSize().getWidth();
 		Size s(length,width);
-		n1.setOptimumSize(s);
-		std::pair<string,Node*> new_node(n1.getId(),&n1);
+		parent->setOptimumSize(s);
+		std::pair<string,Node*> new_node(parent->getId(),parent);
 		this->nodes.insert(new_node);
-		parent = &n1;
 	}else
 	if(cutType == Node::VERTICAL_CUT){
-		Node n1(Node::VERTICAL_CUT, &nodeA, &nodeB);
+		parent = new Node(Node::VERTICAL_CUT, &nodeA, &nodeB);
 		double length = nodeA.getOptimumSize().getLength()+nodeB.getOptimumSize().getLength();
 		double width = max(nodeA.getOptimumSize().getWidth(),nodeB.getOptimumSize().getWidth());
 		Size s(length,width);
-		n1.setOptimumSize(s);
-		std::pair<string,Node*> new_node(n1.getId(),&n1);
+		parent->setOptimumSize(s);
+		std::pair<string,Node*> new_node(parent->getId(),parent);
 		this->nodes.insert(new_node);
-		parent = &n1;
 	}else{
 		//TODO: Throw exception
 		cout<<"Invalid Cut";
-		Node* n1 = NULL;
-		parent = n1;
+		parent = NULL;
 	}
 	return parent;
 }
@@ -106,7 +103,7 @@ Node* Floorplanner::polishToTree(const vector<string>& experssion) {
 			top = nodes.find(polishStack.top())->second;
 			polishStack.pop();
 		}else{
-			//TODO: Trow exception
+			//TODO: Throw exception
 			cout<<"Invalid Expression";
 			top = NULL;
 		}
@@ -146,12 +143,11 @@ void Floorplanner::floorplan() {
 	//TODO: Write Simulated Annealing code here
 	vector<string> expression = generateInitialExpression();
 	printExpression(expression);
-	cout<<nodes.find("hard4")->second->getSizeOptions().begin()->getLength();
-	cout<<nodes.find("hard4")->second->getSizeOptions().begin()->getWidth();
+	cout<<"SomethingSOme";
 	//Node* root = sizeNodes(*nodes.find("hard4")->second,*nodes.find("hard3")->second,Node::HORIZONTAL_CUT);
 	//Node* root = sizeNodes(*nodes.find("hard4")->second,*nodes.find("hard3")->second,Node::VERTICAL_CUT);
 	Node* root = polishToTree(expression);
-	cout<<"\nArea:\t"<<computeCost(root);
+	cout<<"\nArea:\t"<<computeCost(root)<<endl;
 	this->printNodes();
 }
 void Floorplanner::printNodes(){
