@@ -47,17 +47,27 @@ bool PolishUtilities::isValidExpression(const vector<string>& experssion){
 			if(!polishStack.empty()){
 				if(!isValidCut(polishStack.top())){
 					polishStack.pop();
-					if(!isValidCut(polishStack.top())){
-						polishStack.pop();
+					if(!polishStack.empty()){
+						if(!isValidCut(polishStack.top())){
+							//Not performing pop to simulate keeping computed variable in the top again
+							//polishStack.pop();
+						}else{
+							//Operator after operand, eg: "|A|"
+							isValid = false;
+							break;
+						}
 					}else{
+						//One missing operand, eg: "A|"
 						isValid = false;
 						break;
 					}
 				}else{
+					//Operator after operator, eg: "||"
 					isValid = false;
 					break;
 				}
 			}else{
+				//No operand or operator after operator,ie Stack is empty eg: "|"
 				isValid = false;
 				break;
 			}
@@ -67,7 +77,7 @@ bool PolishUtilities::isValidExpression(const vector<string>& experssion){
 			polishStack.push(temp);
 		}
 	}
-	if(!polishStack.empty()){
+	if(polishStack.size()!=1){
 		isValid = false;
 	}
 	return isValid;

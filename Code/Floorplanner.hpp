@@ -9,15 +9,15 @@ void floorplannerUnitTest();
 class Floorplanner {
 private:
 	unordered_map<string,Node*> nodes;
+	vector<string> generateInitialExpression();
 protected:
-
+	Node* sizeNodes(Node &nodeA, Node &nodeB, int cutType);
 	Node* polishToTree(const vector<string>& experssion);
 	double computeCost(const Node& root);
 	static bool acceptMove(double deltaCost, double temperature);
 	static void move(vector<string>& currentPolish);
 	static double coolDown(double temperature);
 public:
-	Node* sizeNodes(Node &nodeA, Node &nodeB, int cutType);
 	Floorplanner(list<Node>& nodes);
 	void insertNode(Node& nodeA);
 	void removeNode(string id);
