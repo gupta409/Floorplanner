@@ -63,7 +63,13 @@ Node::Node(int cutType, Node* left, Node* right){
 	this->softMaxAspect = 0;
 	this->nodeType = HARD;
 }
-
+bool Node::isEndNode() {
+	bool isEnd = false;
+	if (this->left == NULL && this->right == NULL) {
+		isEnd = true;
+	}
+	return isEnd;
+}
 int Node::getCutType() const {
 	return cutType;
 }

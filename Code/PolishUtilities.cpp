@@ -62,7 +62,7 @@ bool PolishUtilities::isValidExpression(const vector<string>& experssion){
 						break;
 					}
 				}else{
-					//Operator after operator, eg: "||"
+					//Operator fetched from stack instread of operand, eg: "||"
 					isValid = false;
 					break;
 				}
@@ -81,4 +81,38 @@ bool PolishUtilities::isValidExpression(const vector<string>& experssion){
 		isValid = false;
 	}
 	return isValid;
+}
+bool PolishUtilities::isNormalizedExpression(const vector<string>& expression) {
+	bool isNormalized = true;
+	string prev, curr;
+	if (isValidExpression(expression)) {
+		auto it = expression.begin();
+		prev = *it;
+		if (it != expression.end()) {
+			++it;
+		}
+		else {
+			isNormalized = true;
+		}
+		for (; it != expression.end(); ++it) {
+			curr = *it;
+			//If two consecutive cuts found
+			if (isValidCut(prev) && isValidCut(curr)) {
+				isNormalized = false;
+				break;
+			}
+			else {
+				prev = curr;
+			}
+		}
+	}
+	else {
+		isNormalized = false;
+	}
+	return isNormalized;
+}
+void PolishUtilities::printExpression(const vector<string>& expression) {
+	for (auto it = expression.begin(); it != expression.end(); ++it) {
+		cout << *it;
+	}
 }

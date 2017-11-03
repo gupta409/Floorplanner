@@ -23,6 +23,8 @@ public:
 	Node(const string& id, double softArea, double softMinAspect, double softMaxAspect);
 	Node(const string& id, list<Size>& sizeOptions);
 	Node(int cutType, Node* left, Node* right);
+	//Property 
+	bool Node::isEndNode();
 	//Getter Setters
 	int getCutType() const;
 	bool isNodeType() const;

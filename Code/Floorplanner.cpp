@@ -11,16 +11,21 @@ Node* Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
 	Node* parent;
 	list<Size> temp;
 	Size defaultSize(0,0);
-	//FIXME: Only Size nodeA and nodeB and not all nodes in the map
-	if(!nodeA.getSizeOptions().empty()){
-		nodeA.setOptimumSize(nodeA.getSizeOptions().front());
-	}else{
-		nodeA.setOptimumSize(defaultSize);
+	if (nodeA.isEndNode()) {
+		if (!nodeA.getSizeOptions().empty()) {
+			nodeA.setOptimumSize(nodeA.getSizeOptions().front());
+		}
+		else {
+			nodeA.setOptimumSize(defaultSize);
+		}
 	}
-	if(!nodeB.getSizeOptions().empty()){
-		nodeB.setOptimumSize(nodeB.getSizeOptions().front());
-	}else{
-		nodeB.setOptimumSize(defaultSize);
+	if (nodeB.isEndNode()) {
+		if (!nodeB.getSizeOptions().empty()) {
+			nodeB.setOptimumSize(nodeB.getSizeOptions().front());
+		}
+		else {
+			nodeB.setOptimumSize(defaultSize);
+		}
 	}
 	if(cutType == Node::HORIZONTAL_CUT){
 		parent = new Node(Node::HORIZONTAL_CUT, &nodeA, &nodeB);
@@ -123,6 +128,11 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 	return isAccepted;
 }
 //Makes changes in the polish expression based on the Wong-Liu Moves model
+/* Options of moves available: 
+		Exchange 2 operands
+		Complement a series of operators between two operands
+		Exchange adjecnt operator and operand if resultant is still normalized polish expression
+*/
 void Floorplanner::move(vector<string>& currentPolish) {
 	//ToDO:
 }
@@ -138,17 +148,13 @@ Floorplanner::Floorplanner(list<Node>& nodes) {
 		this->nodes.insert(new_node);
 	}
 }
-//FIXME: Bugs in this function
 void Floorplanner::floorplan() {
 	//TODO: Write Simulated Annealing code here
 	vector<string> expression = generateInitialExpression();
+	//TODO: Remove this
 	printExpression(expression);
-	cout<<"SomethingSOme";
-	//Node* root = sizeNodes(*nodes.find("hard4")->second,*nodes.find("hard3")->second,Node::HORIZONTAL_CUT);
-	//Node* root = sizeNodes(*nodes.find("hard4")->second,*nodes.find("hard3")->second,Node::VERTICAL_CUT);
 	Node* root = polishToTree(expression);
 	cout<<"\nArea:\t"<<computeCost(root)<<endl;
-	this->printNodes();
 }
 void Floorplanner::printNodes(){
 	for(auto it = this->nodes.begin(); it != this->nodes.end(); ++it){
@@ -173,7 +179,6 @@ vector<string> Floorplanner::generateInitialExpression(){
 	if(nodes.size()>2){
 		++it;
 		for(; it!=nodes.end();++it, i++){
-			//TODO: Re-check if second node is not getting added twice
 			expression.push_back(it->second->getId());
 			if(i%2==0){
 				expression.push_back(PolishUtilities::VERTICAL_CUT);

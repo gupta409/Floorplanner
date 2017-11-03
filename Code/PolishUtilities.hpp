@@ -19,7 +19,9 @@ public:
 	static bool isHorizontalCut(string s);
 	static bool isValidCut(string s);
 	static bool isValidExpression(const vector<string>& experssion);
+	static bool isNormalizedExpression(const vector<string>& experssion);
 	static int getCutType(string s);
+	static void printExpression(const vector<string>& experssion);
 	static const string VERTICAL_CUT;
 	static const string HORIZONTAL_CUT;
 };
