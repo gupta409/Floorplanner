@@ -1,10 +1,12 @@
 #include "unordered_map"
 #include "Floorplanner.hpp"
+#include "PolishUtilities.hpp"
 #include "Node.hpp"
-#include "cmath"
+#include "algorithm"
+#include "stack"
 #include "string"
 //Finds the optimum size of the Nodes with the specified cut
-void Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
+Node* Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
 	//TODO: Set optimum size based on cut; currently directly using first element of the options: considering only one option for each hard block
 	list<Size> temp;
 	Size defaultSize(0,0);
@@ -21,31 +23,67 @@ void Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
 	}
 	if(cutType == Node::HORIZONTAL_CUT){
 		Node n1(Node::HORIZONTAL_CUT, &nodeA, &nodeB);
-		double length = fmax(nodeA.getOptimumSize().getLength(),nodeB.getOptimumSize().getLength());
+		double length = max(nodeA.getOptimumSize().getLength(),nodeB.getOptimumSize().getLength());
 		double width = nodeA.getOptimumSize().getWidth()+nodeB.getOptimumSize().getWidth();
 		Size s(length,width);
 		n1.setOptimumSize(s);
 		std::pair<string,Node*> new_node(n1.getId(),&n1);
 		this->nodes.insert(new_node);
+		return &n1;
 	}else
-	if(cutType == Node::VERTICAL_CUT){
+		if(cutType == Node::VERTICAL_CUT){
 			Node n1(Node::VERTICAL_CUT, &nodeA, &nodeB);
 			double length = nodeA.getOptimumSize().getLength()+nodeB.getOptimumSize().getLength();
-			double width = fmax(nodeA.getOptimumSize().getWidth(),nodeB.getOptimumSize().getWidth());
+			double width = max(nodeA.getOptimumSize().getWidth(),nodeB.getOptimumSize().getWidth());
 			Size s(length,width);
 			n1.setOptimumSize(s);
 			std::pair<string,Node*> new_node(n1.getId(),&n1);
 			this->nodes.insert(new_node);
-	}else{
-		//TODO: Throw exception
-		cout<<"Invalid Cut";
-	}
+			return &n1;
+		}else{
+			//TODO: Throw exception
+			cout<<"Invalid Cut";
+			Node* n1 = NULL;
+			return n1;
+		}
 }
 //Converts polish expression to tree and computes sizing and area while converting. Returns: root node of the tree
-Node Floorplanner::polishToTree(const vector<string>& experssion) {
-	//TODO:
-	//Node n;
-	//return n;
+Node* Floorplanner::polishToTree(const vector<string>& experssion) {
+	Node* top;
+	Node* n1;
+	Node* n2;
+	stack<string> polishStack;
+	string temp;
+	for(unsigned int i=0;i<experssion.size();i++){
+		temp = experssion[i];
+		//When cut found pop cut and last 2 operands
+		if(PolishUtilities::isValidCut(temp)){
+			if(!polishStack.empty()){
+				n1 = nodes.find(polishStack.top())->second;
+				polishStack.pop();
+			}else{
+				//TODO: Throw error
+				n1 = NULL;
+			}
+			if(!polishStack.empty()){
+				n2 = nodes.find(polishStack.top())->second;
+				polishStack.pop();
+			}else{
+				//TODO: Throw error
+				n2 = NULL;
+			}
+			top = sizeNodes(*n1,*n2,PolishUtilities::getCutType(temp));
+		}
+		else{
+			//Name of block found; add to the stack
+			polishStack.push(temp);
+		}
+	}
+	if(!polishStack.empty()){
+		//TODO: Invalid expression found: thorw error
+		cout<<"Invalid Expression";
+	}
+	return top;
 }
 //Traverses the tree and gives total area of the floorplan. Returns: Total Area
 double Floorplanner::computeCost(const Node& root) {
@@ -77,7 +115,7 @@ Floorplanner::Floorplanner(list<Node>& nodes) {
 }
 
 void Floorplanner::floorplan() {
-	//TODO: Write SA code here
+	//TODO: Write Simulated Annealing code here
 }
 void Floorplanner::printNodes(){
 	for(auto it = this->nodes.begin(); it != this->nodes.end(); ++it){

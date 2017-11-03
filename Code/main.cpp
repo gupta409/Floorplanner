@@ -7,11 +7,12 @@
 #include "iostream"
 #include "Node.hpp"
 #include "Floorplanner.hpp"
+#include "PolishUtilities.hpp"
 using namespace std;
-
 int main(){
 	//nodeUnitTest();
-	floorplannerUnitTest();
+	//floorplannerUnitTest();
+	polishUtilitesUnitTest();
 	return 0;
 }
 

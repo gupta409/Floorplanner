@@ -24,10 +24,29 @@ void floorplannerUnitTest(){
 	nodes.push_back(n3);
 	nodes.push_back(n4);
 	for(auto it:nodes){
-		cout<<it.getId()<<"\t"<<" Length:"<<it.getSizeOptions().front().getLength()<<" Width:"<<it.getSizeOptions().front().getWidth()<<endl;
+		//cout<<it.getId()<<"\t"<<" Length:"<<it.getSizeOptions().front().getLength()<<" Width:"<<it.getSizeOptions().front().getWidth()<<endl;
 	}
 	Floorplanner floorplanner1(nodes);
+	//floorplanner1.printNodes();
+	floorplanner1.floorplan();
+	//floorplanner1.sizeNodes(n1,n2,Node::HORIZONTAL_CUT);
 	floorplanner1.printNodes();
-	floorplanner1.sizeNodes(n1,n2,Node::HORIZONTAL_CUT);
-	floorplanner1.printNodes();
+	/*
+	 *Copy to floorplan function
+	int i = 0;
+	sizeNodes(*nodes.find("hard2")->second,*nodes.find("hard2")->second,Node::VERTICAL_CUT);
+	auto itp = this->nodes.begin();
+	++itp;
+	printNodes();
+	for(auto it = this->nodes.begin();itp != this->nodes.end() && it != this->nodes.end(); ++it, ++itp){
+		if(i<5){
+			Node* n1 = it->second;
+
+			Node* n2 = it->second;
+			sizeNodes(*n1,*n2,Node::VERTICAL_CUT);
+					i++;
+		}
+	}
+	 */
+
 }
