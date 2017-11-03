@@ -31,7 +31,7 @@ Node* Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
 		std::pair<string,Node*> new_node(n1.getId(),&n1);
 		this->nodes.insert(new_node);
 		parent = &n1;
-	}
+	}else
 	if(cutType == Node::VERTICAL_CUT){
 		Node n1(Node::VERTICAL_CUT, &nodeA, &nodeB);
 		double length = nodeA.getOptimumSize().getLength()+nodeB.getOptimumSize().getLength();
@@ -141,13 +141,18 @@ Floorplanner::Floorplanner(list<Node>& nodes) {
 		this->nodes.insert(new_node);
 	}
 }
+//FIXME: Bugs in this function
 void Floorplanner::floorplan() {
 	//TODO: Write Simulated Annealing code here
 	vector<string> expression = generateInitialExpression();
 	printExpression(expression);
-	Node* root = sizeNodes(*nodes.find("hard4")->second,*nodes.find("hard3")->second,Node::VERTICAL_CUT);
-	//Node* root = polishToTree(expression);
-	//cout<<"\nArea:\t"<<computeCost(root);
+	cout<<nodes.find("hard4")->second->getSizeOptions().begin()->getLength();
+	cout<<nodes.find("hard4")->second->getSizeOptions().begin()->getWidth();
+	//Node* root = sizeNodes(*nodes.find("hard4")->second,*nodes.find("hard3")->second,Node::HORIZONTAL_CUT);
+	//Node* root = sizeNodes(*nodes.find("hard4")->second,*nodes.find("hard3")->second,Node::VERTICAL_CUT);
+	Node* root = polishToTree(expression);
+	cout<<"\nArea:\t"<<computeCost(root);
+	this->printNodes();
 }
 void Floorplanner::printNodes(){
 	for(auto it = this->nodes.begin(); it != this->nodes.end(); ++it){
@@ -168,7 +173,7 @@ vector<string> Floorplanner::generateInitialExpression(){
 		cout<<"Too few nodes in floorplan";
 		//FIXME: Handle error and give output as same node itself
 	}
-	int i = 0;
+	int i = 1;
 	if(nodes.size()>2){
 		++it;
 		for(; it!=nodes.end();++it, i++){
@@ -181,7 +186,6 @@ vector<string> Floorplanner::generateInitialExpression(){
 			}
 		}
 	}
-
 	return expression;
 }
 void Floorplanner::printExpression(const vector<string>& expression){
