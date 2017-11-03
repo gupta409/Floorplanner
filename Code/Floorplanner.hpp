@@ -10,7 +10,6 @@ class Floorplanner {
 private:
 	unordered_map<string,Node*> nodes;
 	vector<string> generateInitialExpression();
-	void printExpression(const vector<string>& expression);
 protected:
 	Node* sizeNodes(Node &nodeA, Node &nodeB, int cutType);
 	Node* polishToTree(const vector<string>& experssion);

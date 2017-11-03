@@ -5,6 +5,13 @@
 #include "algorithm"
 #include "stack"
 #include "string"
+//Constructor
+Floorplanner::Floorplanner(list<Node>& nodes) {
+	for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+		std::pair<string, Node*> new_node(it->getId(), &*it);
+		this->nodes.insert(new_node);
+	}
+}
 //Finds the optimum size of the Nodes with the specified cut
 Node* Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
 	//TODO: Set optimum size based on cut; currently directly using first element of the options: considering only one option for each hard block
@@ -134,7 +141,8 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 		Exchange adjecnt operator and operand if resultant is still normalized polish expression
 */
 void Floorplanner::move(vector<string>& currentPolish) {
-	//ToDO:
+	//ToDo:
+
 }
 //Returns new temperature
 double Floorplanner::coolDown(double temperature) {
@@ -142,25 +150,23 @@ double Floorplanner::coolDown(double temperature) {
 	return 0.0;
 }
 
-Floorplanner::Floorplanner(list<Node>& nodes) {
-	for(auto it = nodes.begin(); it!=nodes.end();++it){
-		std::pair<string,Node*> new_node(it->getId(),&*it);
-		this->nodes.insert(new_node);
-	}
-}
+//Simulated Annealing performed here
 void Floorplanner::floorplan() {
 	//TODO: Write Simulated Annealing code here
 	vector<string> expression = generateInitialExpression();
 	//TODO: Remove this
-	printExpression(expression);
+	PolishUtilities::printExpression(expression);
 	Node* root = polishToTree(expression);
 	cout<<"\nArea:\t"<<computeCost(root)<<endl;
 }
+
+//Prints sizing of all the nodes in the tree
 void Floorplanner::printNodes(){
 	for(auto it = this->nodes.begin(); it != this->nodes.end(); ++it){
 		cout<<"ID:\t"<<it->first<<" Length:\t"<<it->second->getOptimumSize().getLength()<<" Width:\t"<<it->second->getOptimumSize().getWidth()<<endl;
 	}
 }
+
 //Function currently generates initial expression of the form AB|C-D|E-F|G|
 vector<string> Floorplanner::generateInitialExpression(){
 	vector<string> expression;
@@ -188,10 +194,4 @@ vector<string> Floorplanner::generateInitialExpression(){
 		}
 	}
 	return expression;
-}
-void Floorplanner::printExpression(const vector<string>& expression){
-	for(auto it = expression.begin();it!=expression.end();++it){
-		cout<<*it;
-	}
-	cout<<endl;
 }
