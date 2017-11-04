@@ -6,12 +6,14 @@ void polishUnitTest1();
 void polishUnitTest2();
 void polishUnitTest3();
 void polishUnitTest4();
+void polishUnitTest5();
 void printVector(vector<int> data);
 void polishUtilitesUnitTest(){
 	//polishUnitTest1();
 	//polishUnitTest2();
 	//polishUnitTest3();
-	polishUnitTest4();
+	//polishUnitTest4();
+	polishUnitTest5();
 }
 void polishUnitTest1(){
 	string s1 = "|";
@@ -82,6 +84,21 @@ void polishUnitTest4() {
 	printVector(PolishUtilities::getLocations(expression).first);
 	cout << "\n Operands: ";
 	printVector(PolishUtilities::getLocations(expression).second);
+}
+void polishUnitTest5() {
+	vector<std::string> expression;
+	expression.push_back("Josh");
+	expression.push_back("Anish");
+	expression.push_back("Rahul");
+	expression.push_back("|");
+	expression.push_back("Ronald");
+	expression.push_back("-");
+	expression.push_back("-");
+	expression.push_back("Ronald");
+	expression.push_back("-");
+	expression.push_back("-");
+	PolishUtilities::printExpression(expression);
+	PolishUtilities::getRepOperators(expression);
 }
 void printVector(vector<int> data) {
 	for (auto it = data.begin(); it != data.end(); ++it) {

@@ -18,7 +18,7 @@ protected:
 	static double coolDown(double temperature);
 public:
 	vector<string> generateInitialExpression();
-	static void move(vector<string>& currentPolish);
+	static vector<string> move(vector<string> currentPolish);
 	Floorplanner(list<Node>& nodes);
 	void insertNode(Node& nodeA);
 	void removeNode(string id);

@@ -57,7 +57,7 @@ void floorplanUnitTest2() {
 	PolishUtilities::printExpression(expresion);
 	for (int i = 0; i < 50; i++) {
 		cout << std::endl;
-		Floorplanner::move(expresion);
+		expresion = Floorplanner::move(expresion);
 		PolishUtilities::printExpression(expresion);
 	}
 	

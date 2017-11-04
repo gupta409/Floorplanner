@@ -137,6 +137,29 @@ pair<vector<int>, vector<int>> PolishUtilities::getLocations(const vector<string
 	//Returns operators,operand index pair
 	return data;
 }
+//Returns pair of starting and ending points of indexes where consecutive operators are found between operands
+vector<pair<int, int>> PolishUtilities::getRepOperators(const vector<string>& expression)
+{
+	vector<pair<int, int>> locations;
+	int start = 0;
+	int end = 0;
+	bool isStarted = false;
+	bool isStopped = true;
+	for (int i = 0; i < expression.size();i++) {
+		if (!isStarted && isValidCut(expression[i])) {
+			isStarted = true;
+			start = i;
+		}
+		if (isStarted && !isValidCut(expression[i])) {
+			isStarted = false;
+			end = i - 1;
+			locations.push_back(pair<int, int>(start, end));
+		}
+			
+		
+	}
+	return locations;
+}
 //Returns compliment of the cut
 string PolishUtilities::getCompliment(string s) {
 	if (isValidCut(s)) {

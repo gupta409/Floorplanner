@@ -150,13 +150,13 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 	return isAccepted;
 }
 //Makes changes in the polish expression based on the Wong-Liu Moves model
-void Floorplanner::move(vector<string>& currentPolish) {
+vector<string> Floorplanner::move(vector<string> currentPolish) {
 	//ToDo:
 	//int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
 	int moveOption = 2;
-	//Pair of operators,operands index
-	pair<vector<int>, vector<int>> indexes = PolishUtilities::getLocations(currentPolish);
 	if (moveOption == 1) {
+		//Pair of operators,operands index
+		pair<vector<int>, vector<int>> indexes = PolishUtilities::getLocations(currentPolish);
 		//Move1: Exchange 2 operands with no other operand in between
 		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, indexes.second.size() - 1);
 		int randomOperandIndex1 = indexes.second[randomPoint];
@@ -172,49 +172,46 @@ void Floorplanner::move(vector<string>& currentPolish) {
 		currentPolish[randomOperandIndex2] = temp;
 	}
 	if (moveOption == 2) {
-		//FIXME: Redo this section
 		//Move2: Complement a series of operators between two operands
-		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, indexes.first.size() - 1);
-		int randomOperatorIndex = indexes.first[randomPoint];
-		currentPolish[randomOperatorIndex] = PolishUtilities::getCompliment(currentPolish[randomOperatorIndex]);
-		for (int i = 1; randomPoint + i <= indexes.first.size() - 1 &&  indexes.first[randomPoint + i] == indexes.first[randomPoint] + 1;i++) {
-			cout << "foring"<<endl;
-			randomOperatorIndex = indexes.first[randomPoint + i];
-			currentPolish[randomOperatorIndex] = PolishUtilities::getCompliment(currentPolish[randomOperatorIndex]);
+		vector<pair<int, int>> validOperatorSeries = PolishUtilities::getRepOperators(currentPolish);
+		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validOperatorSeries.size() - 1);
+		for (int i = validOperatorSeries[randomPoint].first; i <= validOperatorSeries[randomPoint].second; i++) {
+			currentPolish[i] = PolishUtilities::getCompliment(currentPolish[i]);
 		}
 	}
 	if (moveOption == 3) {
 		//Move3: Exchange adjecnt operator and operand if resultant is still normalized polish expression
 
 	}
+	return currentPolish;
 }
 //Returns new temperature
 double Floorplanner::coolDown(double temperature) {
-	//TODO:
-	//Use newTemp = 0.95*temperature
-	return 0.0;
+	return temperature*FloorplannerConstants::getInstance().getCoolDownRate();
 }
 
 //Simulated Annealing performed here
 void Floorplanner::floorplan() {
 	//TODO: Write Simulated Annealing code here
-	vector<string> expression = generateInitialExpression();
+	vector<string> currentExpression = generateInitialExpression();
 	//TODO: Remove this
 	double temperature=0; //= Starting temperature
-	Node* root, *initialRoot;
-	double delCost;
+	Node* root;
+	double delCost, newCost, currentCost;
+	currentCost = computeCost(polishToTree(currentExpression));
+	vector<string> newExpression;
 	while(temperature != 0){
-		initialRoot = polishToTree(expression);
-		//Move
-		move(expression);
-		root = polishToTree(expression);
-		delCost = computeCost(initialRoot)-computeCost(root);
+		newExpression = move(currentExpression);
+		newCost = computeCost(polishToTree(newExpression));
+		delCost = newCost-currentCost;
 		if (acceptMove(delCost, temperature)) {
-			//FIXME: change orignal data
+			//Lock changes
+			currentExpression = newExpression;
+			currentCost = newCost;
 		}
 		temperature = coolDown(temperature);
 	}
-	
+	cout << computeCost(polishToTree(currentExpression));
 	
 }
 
