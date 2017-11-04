@@ -116,3 +116,21 @@ void PolishUtilities::printExpression(const vector<string>& expression) {
 		cout << *it;
 	}
 }
+//Returns indexs where operand is present and where operator is present <<vector of operands>,<vecotr of operators>>
+pair<vector<int>, vector<int>> PolishUtilities::getLocations(const vector<string>& expression) {
+	pair<vector<int>, vector<int>>  data;
+	int i = 0;
+	for (int i = 0; i < expression.size();i++) {
+		string temp = expression.at(i);
+		if (isValidCut(temp)) {
+			//Add to list of Operators
+			data.first.push_back(i);
+		}
+		else {
+			//Add to list of Operands
+			data.second.push_back(i);
+		}
+	}
+	//Returns operators,operand index pair
+	return data;
+}

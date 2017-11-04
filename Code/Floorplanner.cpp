@@ -131,22 +131,32 @@ double Floorplanner::computeCost(Node* root) {
 //Returns: True/False
 bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 	bool isAccepted = false;
-	//TODO:
+	if (deltaCost < 0) {
+		isAccepted = true;
+	}
+	else {
+
+	}
 	return isAccepted;
 }
 //Makes changes in the polish expression based on the Wong-Liu Moves model
-/* Options of moves available: 
-		Exchange 2 operands
-		Complement a series of operators between two operands
-		Exchange adjecnt operator and operand if resultant is still normalized polish expression
-*/
 void Floorplanner::move(vector<string>& currentPolish) {
 	//ToDo:
-
+	//Required Constants: Moving probability
+	//Pair of operators,operands index
+	pair<vector<int>, vector<int>> indexes = PolishUtilities::getLocations(currentPolish);
+	//Move1: Exchange 2 operands
+		//Get random number in the range of indexes.second.size()
+		//int n1 = 
+		//Get another random number
+		//Swap the two
+	//Move2: Complement a series of operators between two operands
+	//Move3: Exchange adjecnt operator and operand if resultant is still normalized polish expression
 }
 //Returns new temperature
 double Floorplanner::coolDown(double temperature) {
 	//TODO:
+	//Use newTemp = 0.95*temperature
 	return 0.0;
 }
 
@@ -155,9 +165,22 @@ void Floorplanner::floorplan() {
 	//TODO: Write Simulated Annealing code here
 	vector<string> expression = generateInitialExpression();
 	//TODO: Remove this
-	PolishUtilities::printExpression(expression);
-	Node* root = polishToTree(expression);
-	cout<<"\nArea:\t"<<computeCost(root)<<endl;
+	double temperature=0; //= Starting temperature
+	Node* root, *initialRoot;
+	double delCost;
+	while(temperature != 0){
+		initialRoot = polishToTree(expression);
+		//Move
+		move(expression);
+		root = polishToTree(expression);
+		delCost = computeCost(initialRoot)-computeCost(root);
+		if (acceptMove(delCost, temperature)) {
+			//FIXME: change orignal data
+		}
+		temperature = coolDown(temperature);
+	}
+	
+	
 }
 
 //Prints sizing of all the nodes in the tree

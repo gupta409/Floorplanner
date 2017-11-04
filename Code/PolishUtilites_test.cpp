@@ -5,11 +5,13 @@ using namespace std;
 void polishUnitTest1();
 void polishUnitTest2();
 void polishUnitTest3();
-void printExpression(const vector<string>& expression);
+void polishUnitTest4();
+void printVector(vector<int> data);
 void polishUtilitesUnitTest(){
 	//polishUnitTest1();
-	polishUnitTest2();
-	polishUnitTest3();
+	//polishUnitTest2();
+	//polishUnitTest3();
+	polishUnitTest4();
 }
 void polishUnitTest1(){
 	string s1 = "|";
@@ -65,4 +67,24 @@ void polishUnitTest3() {
 	PolishUtilities::printExpression(expression);
 	cout << endl << "Result: " << PolishUtilities::isNormalizedExpression(expression) << endl;
 }
-
+void polishUnitTest4() {
+	vector<std::string> expression;
+	expression.push_back("Josh");
+	expression.push_back("Anish");
+	expression.push_back("Rahul");
+	expression.push_back("|");
+	expression.push_back("Ronald");
+	expression.push_back("-");
+	expression.push_back("-");
+	PolishUtilities::printExpression(expression);
+	cout << endl << "Result: " << endl; 
+	cout << "Operators: ";
+	printVector(PolishUtilities::getLocations(expression).first);
+	cout << "\n Operands: ";
+	printVector(PolishUtilities::getLocations(expression).second);
+}
+void printVector(vector<int> data) {
+	for (auto it = data.begin(); it != data.end(); ++it) {
+		cout << *it;
+	}
+}

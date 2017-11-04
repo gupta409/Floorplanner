@@ -8,6 +8,9 @@ using namespace std;
 void floorplannerUnitTest();
 class Floorplanner {
 private:
+	const double coolDownRate = 0.95;
+	const double freezingTemperature = 0.1;
+	const double boltzmanConstant = 1;
 	unordered_map<string,Node*> nodes;
 	vector<string> generateInitialExpression();
 protected:
