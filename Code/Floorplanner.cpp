@@ -1,10 +1,13 @@
 #include "unordered_map"
 #include "Floorplanner.hpp"
 #include "PolishUtilities.hpp"
+#include "RandomizeUtilites.hpp"
+#include "FloorplannerConstants.hpp"
 #include "Node.hpp"
 #include "algorithm"
 #include "stack"
 #include "string"
+#include <math.h>
 //Constructor
 Floorplanner::Floorplanner(list<Node>& nodes) {
 	for (auto it = nodes.begin(); it != nodes.end(); ++it) {
@@ -131,27 +134,59 @@ double Floorplanner::computeCost(Node* root) {
 //Returns: True/False
 bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 	bool isAccepted = false;
+	double boltz;
+	int r;
 	if (deltaCost < 0) {
 		isAccepted = true;
 	}
 	else {
-
+		//TODO: Take constant from constants class
+		boltz = exp(deltaCost/(FloorplannerConstants::getInstance().getBoltzmanConstant()*temperature));
+		r = RandomizeUtilites::getInstance().getRandom(0,1);
+		if (r < boltz) {
+			isAccepted = true;
+		}
 	}
 	return isAccepted;
 }
 //Makes changes in the polish expression based on the Wong-Liu Moves model
 void Floorplanner::move(vector<string>& currentPolish) {
 	//ToDo:
-	//Required Constants: Moving probability
+	//int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
+	int moveOption = 2;
 	//Pair of operators,operands index
 	pair<vector<int>, vector<int>> indexes = PolishUtilities::getLocations(currentPolish);
-	//Move1: Exchange 2 operands
-		//Get random number in the range of indexes.second.size()
-		//int n1 = 
-		//Get another random number
-		//Swap the two
-	//Move2: Complement a series of operators between two operands
-	//Move3: Exchange adjecnt operator and operand if resultant is still normalized polish expression
+	if (moveOption == 1) {
+		//Move1: Exchange 2 operands with no other operand in between
+		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, indexes.second.size() - 1);
+		int randomOperandIndex1 = indexes.second[randomPoint];
+		int randomOperandIndex2;
+		if (randomPoint < indexes.second.size() - 1) {
+			randomOperandIndex2 = indexes.second[randomPoint + 1];
+		}
+		else {
+			randomOperandIndex2 = indexes.second[randomPoint - 1];
+		}
+		string temp = currentPolish.at(randomOperandIndex1);
+		currentPolish[randomOperandIndex1] = currentPolish.at(randomOperandIndex2);
+		currentPolish[randomOperandIndex2] = temp;
+	}
+	if (moveOption == 2) {
+		//FIXME: Redo this section
+		//Move2: Complement a series of operators between two operands
+		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, indexes.first.size() - 1);
+		int randomOperatorIndex = indexes.first[randomPoint];
+		currentPolish[randomOperatorIndex] = PolishUtilities::getCompliment(currentPolish[randomOperatorIndex]);
+		for (int i = 1; randomPoint + i <= indexes.first.size() - 1 &&  indexes.first[randomPoint + i] == indexes.first[randomPoint] + 1;i++) {
+			cout << "foring"<<endl;
+			randomOperatorIndex = indexes.first[randomPoint + i];
+			currentPolish[randomOperatorIndex] = PolishUtilities::getCompliment(currentPolish[randomOperatorIndex]);
+		}
+	}
+	if (moveOption == 3) {
+		//Move3: Exchange adjecnt operator and operand if resultant is still normalized polish expression
+
+	}
 }
 //Returns new temperature
 double Floorplanner::coolDown(double temperature) {

@@ -16,6 +16,7 @@ private:
 	RandomizeUtilites();
 public:
 	int getRandom(int start, int end);
+	//Making class singleton
 	static RandomizeUtilites& getInstance()
 	{
 		static RandomizeUtilites instance;

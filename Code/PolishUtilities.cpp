@@ -96,14 +96,17 @@ bool PolishUtilities::isNormalizedExpression(const vector<string>& expression) {
 		}
 		for (; it != expression.end(); ++it) {
 			curr = *it;
-			//If two consecutive cuts found
-			if (isValidCut(prev) && isValidCut(curr)) {
+			//If two consecutive horizontal cuts found
+			if (isHorizontalCut(prev) && isHorizontalCut(curr)) {
 				isNormalized = false;
 				break;
 			}
-			else {
-				prev = curr;
+			//If two consecutive vertical cuts found
+			if (isVerticalCut(prev) && isVerticalCut(curr)) {
+				isNormalized = false;
+				break;
 			}
+			prev = curr;
 		}
 	}
 	else {
@@ -133,4 +136,20 @@ pair<vector<int>, vector<int>> PolishUtilities::getLocations(const vector<string
 	}
 	//Returns operators,operand index pair
 	return data;
+}
+//Returns compliment of the cut
+string PolishUtilities::getCompliment(string s) {
+	if (isValidCut(s)) {
+		if (isHorizontalCut(s)) {
+			return VERTICAL_CUT;
+		}
+		else {
+			return HORIZONTAL_CUT;
+		}
+	}
+	else {
+		//FIXME: Throw invalid cut exception
+		cout << "Invalid Cut provieded for compliemnt";
+		return HORIZONTAL_CUT;
+	}
 }

@@ -22,6 +22,7 @@ public:
 	static bool isNormalizedExpression(const vector<string>& experssion);
 	static int getCutType(string s);
 	static void printExpression(const vector<string>& experssion);
+	static string getCompliment(string s);
 	static pair<vector<int>, vector<int>> PolishUtilities::getLocations(const vector<string>& expression);
 	static const string VERTICAL_CUT;
 	static const string HORIZONTAL_CUT;

@@ -1,0 +1,25 @@
+#pragma once
+void floorplannerConstantsTest();
+class FloorplannerConstants
+{
+private:
+	void loadConstants();
+	FloorplannerConstants();
+	//Constants
+	double coolDownRate = 0.95;
+	double freezingTemperature = 0.1;
+	double boltzmanConstant = 1;
+public:
+	//Making class singleton
+	static FloorplannerConstants& getInstance()
+	{
+		static FloorplannerConstants instance;
+		return instance;
+	}
+	FloorplannerConstants(FloorplannerConstants const&) = delete;
+	void operator=(FloorplannerConstants const&) = delete;
+	double getCoolDownRate();
+	double getFreezingTemperature();
+	double getBoltzmanConstant();
+};
+
