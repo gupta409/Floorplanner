@@ -188,8 +188,8 @@ vector<int> PolishUtilities::getSurroundedOperands(const vector<string>& express
 		//if operand found
 		if (!isValidCut(expression[i])) {
 			validatorStack.push(expression[i]);
-			//if i is not last element in the expression and i+1 is a valid cut and if the stack size is >3
-			if (i < expression.size() - 1 && isValidCut(expression[i+1]) && validatorStack.size() > 3) {
+			//if i is not last element in the expression and i+1 is a valid cut and if the stack size is >=3
+			if (i < expression.size() - 1 && isValidCut(expression[i+1]) && validatorStack.size() >= 3) {
 				// and the previous element is not the same cut
 				if (expression[i+1].compare(expression[i-1]) != 0) {
 					validIndices.push_back(i);

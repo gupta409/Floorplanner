@@ -6,9 +6,10 @@ private:
 	void loadConstants();
 	FloorplannerConstants();
 	//Constants
-	double coolDownRate = 0.95;
-	double freezingTemperature = 0.1;
-	double boltzmanConstant = 1;
+	double coolDownRate;
+	double startTemperature;
+	double freezingTemperature;
+	double boltzmanConstant;
 public:
 	//Making class singleton
 	static FloorplannerConstants& getInstance()
@@ -21,5 +22,6 @@ public:
 	double getCoolDownRate();
 	double getFreezingTemperature();
 	double getBoltzmanConstant();
+	double getStartTemp();
 };
 

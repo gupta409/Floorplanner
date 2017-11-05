@@ -140,7 +140,6 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 		isAccepted = true;
 	}
 	else {
-		//TODO: Take constant from constants class
 		boltz = exp(deltaCost/(FloorplannerConstants::getInstance().getBoltzmanConstant()*temperature));
 		r = RandomizeUtilites::getInstance().getRandom(0,1);
 		if (r < boltz) {
@@ -151,8 +150,8 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 }
 //Makes changes in the polish expression based on the Wong-Liu Moves model
 vector<string> Floorplanner::move(vector<string> currentPolish) {
-	//ToDo:
 	int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
+	//cout << moveOption << endl;
 	//Move1: Exchange 2 operands with no other operand in between
 	if (moveOption == 1) {
 		//Pair of operators,operands index
@@ -201,18 +200,16 @@ double Floorplanner::coolDown(double temperature) {
 
 //Simulated Annealing performed here
 void Floorplanner::floorplan() {
-	//TODO: Write Simulated Annealing code here
 	vector<string> currentExpression = generateInitialExpression();
-	//TODO: Remove this
-	double temperature=0; //= Starting temperature
+	double temperature = FloorplannerConstants::getInstance().getStartTemp();
 	Node* root;
 	double delCost, newCost, currentCost;
 	currentCost = computeCost(polishToTree(currentExpression));
 	vector<string> newExpression;
-	while(temperature != 0){
+	while(temperature > FloorplannerConstants::getInstance().getFreezingTemperature()){
 		newExpression = move(currentExpression);
 		newCost = computeCost(polishToTree(newExpression));
-		delCost = newCost-currentCost;
+		delCost = newCost - currentCost;
 		if (acceptMove(delCost, temperature)) {
 			//Lock changes
 			currentExpression = newExpression;
@@ -220,8 +217,7 @@ void Floorplanner::floorplan() {
 		}
 		temperature = coolDown(temperature);
 	}
-	cout << computeCost(polishToTree(currentExpression));
-	
+	cout << computeCost(polishToTree(currentExpression))<<endl;
 }
 
 //Prints sizing of all the nodes in the tree

@@ -15,7 +15,7 @@ void floorplanUnitTest1();
 void floorplanUnitTest2();
 void floorplannerUnitTest(){
 	floorplanUnitTest1();
-	//sfloorplanUnitTest2();
+	//floorplanUnitTest2();
 }
 void floorplanUnitTest1() {
 	list<Size> l1;
@@ -30,12 +30,9 @@ void floorplanUnitTest1() {
 	nodes.push_back(n2);
 	nodes.push_back(n3);
 	nodes.push_back(n4);
-	for (auto it : nodes) {
-		cout << it.getId() << "\t" << " Length:" << it.getSizeOptions().front().getLength() << " Width:" << it.getSizeOptions().front().getWidth() << endl;
-	}
 	Floorplanner floorplanner1(nodes);
 	floorplanner1.floorplan();
-	floorplanner1.printNodes();
+	//floorplanner1.printNodes();
 }
 void floorplanUnitTest2() {
 	list<Size> l1;
@@ -49,7 +46,6 @@ void floorplanUnitTest2() {
 	nodes.push_back(n1);
 	nodes.push_back(n2);
 	nodes.push_back(n3);
-	for(int i = 0 ; i< RandomizeUtilites::getInstance().getRandom(0,2000);i++)
 	nodes.push_back(n4);
 	Floorplanner floorplanner1(nodes);
 	vector<string> expresion = floorplanner1.generateInitialExpression();
@@ -57,8 +53,8 @@ void floorplanUnitTest2() {
 	for (int i = 0; i < 200; i++) {
 		cout << std::endl;
 		expresion = Floorplanner::move(expresion);
-		if(!PolishUtilities::isNormalizedExpression(expresion))
-			cout<<"Wrong Expression Found"<<endl;
-		//PolishUtilities::printExpression(expresion);
+		//if(!PolishUtilities::isNormalizedExpression(expresion))
+			//cout<<"Wrong Expression Found"<<endl;
+		PolishUtilities::printExpression(expresion);
 	}
 }
