@@ -7,13 +7,15 @@ void polishUnitTest2();
 void polishUnitTest3();
 void polishUnitTest4();
 void polishUnitTest5();
+void polishUnitTest6();
 void printVector(vector<int> data);
 void polishUtilitesUnitTest(){
 	//polishUnitTest1();
 	//polishUnitTest2();
 	//polishUnitTest3();
 	//polishUnitTest4();
-	polishUnitTest5();
+	//polishUnitTest5();
+	polishUnitTest6();
 }
 void polishUnitTest1(){
 	string s1 = "|";
@@ -99,6 +101,20 @@ void polishUnitTest5() {
 	expression.push_back("-");
 	PolishUtilities::printExpression(expression);
 	PolishUtilities::getRepOperators(expression);
+}
+void polishUnitTest6() {
+	vector<std::string> expression;
+	expression.push_back("A");
+	expression.push_back("B");
+	expression.push_back("-");
+	expression.push_back("C");
+	expression.push_back("-");
+	expression.push_back("D");
+	expression.push_back("|");
+	PolishUtilities::printExpression(expression);
+	cout << endl;
+	printVector(PolishUtilities::getSurroundedOperands(expression));
+	cout << endl;
 }
 void printVector(vector<int> data) {
 	for (auto it = data.begin(); it != data.end(); ++it) {

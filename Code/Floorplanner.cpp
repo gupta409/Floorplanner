@@ -152,8 +152,8 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 //Makes changes in the polish expression based on the Wong-Liu Moves model
 vector<string> Floorplanner::move(vector<string> currentPolish) {
 	//ToDo:
-	//int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
-	int moveOption = 2;
+	int moveOption = RandomizeUtilites::getInstance().getRandom(3, 3);
+	//int moveOption = 3;
 	if (moveOption == 1) {
 		//Pair of operators,operands index
 		pair<vector<int>, vector<int>> indexes = PolishUtilities::getLocations(currentPolish);
@@ -181,7 +181,12 @@ vector<string> Floorplanner::move(vector<string> currentPolish) {
 	}
 	if (moveOption == 3) {
 		//Move3: Exchange adjecnt operator and operand if resultant is still normalized polish expression
+		vector<int> validIndices = PolishUtilities::getSurroundedOperands(currentPolish);
+		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validIndices.size() - 1);
 
+		string temp = currentPolish.at(validIndices[randomPoint]);
+		currentPolish[validIndices[randomPoint]] = currentPolish.at(validIndices[randomPoint]+1);
+		currentPolish[validIndices[randomPoint]+1] = temp;
 	}
 	return currentPolish;
 }

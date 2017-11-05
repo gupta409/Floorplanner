@@ -17,9 +17,9 @@ protected:
 	static bool acceptMove(double deltaCost, double temperature);
 	static double coolDown(double temperature);
 public:
+	Floorplanner(list<Node>& nodes);
 	vector<string> generateInitialExpression();
 	static vector<string> move(vector<string> currentPolish);
-	Floorplanner(list<Node>& nodes);
 	void insertNode(Node& nodeA);
 	void removeNode(string id);
 	void floorplan();

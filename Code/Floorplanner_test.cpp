@@ -51,14 +51,12 @@ void floorplanUnitTest2() {
 	nodes.push_back(n4);
 	Floorplanner floorplanner1(nodes);
 	vector<string> expresion = floorplanner1.generateInitialExpression();
-	expresion.push_back(PolishUtilities::HORIZONTAL_CUT);
-	expresion.push_back(PolishUtilities::HORIZONTAL_CUT);
-	expresion.push_back("Anish");
-	PolishUtilities::printExpression(expresion);
+	//PolishUtilities::printExpression(expresion);
 	for (int i = 0; i < 50; i++) {
 		cout << std::endl;
 		expresion = Floorplanner::move(expresion);
-		PolishUtilities::printExpression(expresion);
+		cout<<PolishUtilities::isNormalizedExpression(expresion)<<endl;
+		//PolishUtilities::printExpression(expresion);
 	}
 	
 }

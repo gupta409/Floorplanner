@@ -176,3 +176,37 @@ string PolishUtilities::getCompliment(string s) {
 		return HORIZONTAL_CUT;
 	}
 }
+//Returns indexes of operands which can be exchanged with next operator for valid expression
+vector<int> PolishUtilities::getSurroundedOperands(const vector<string>& expression) {
+	//Look for operands
+	//If found check for operator on either side
+		//If found on both sides check if both are not same ->true
+		//If found on one side ->true
+	vector<int> validIndices;
+	stack<string> validatorStack;
+	for (int i = 0; i < expression.size(); i++) {
+		//if operand found
+		if (!isValidCut(expression[i])) {
+			validatorStack.push(expression[i]);
+			//if i is not last element in the expression and i+1 is a valid cut and if the stack size is >3
+			if (i < expression.size() - 1 && isValidCut(expression[i+1]) && validatorStack.size() > 3) {
+				// and the previous element is not the same cut
+				if (expression[i+1].compare(expression[i-1]) != 0) {
+					validIndices.push_back(i);
+				}
+			}
+		}
+		else {
+			//Cut found reduce the stack size to simulate operation being performed
+			validatorStack.pop();
+			//Checking if it can be exchanged with the next operand 
+			if (i < expression.size() - 2) {
+				//Next value is an operand and next to next is the same not operator as the current operator
+				if (!isValidCut(expression[i + 1]) && expression[i].compare(expression[i + 2]) != 0) {
+					validIndices.push_back(i);
+				}
+			}
+		}
+	}
+	return validIndices;
+}

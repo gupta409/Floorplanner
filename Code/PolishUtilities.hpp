@@ -25,6 +25,7 @@ public:
 	static string getCompliment(string s);
 	static pair<vector<int>, vector<int>> getLocations(const vector<string>& expression);
 	static vector<pair<int, int>> getRepOperators(const vector<string>& expression);
+	static vector<int> getSurroundedOperands(const vector<string>& expression);
 	static const string VERTICAL_CUT;
 	static const string HORIZONTAL_CUT;
 };
