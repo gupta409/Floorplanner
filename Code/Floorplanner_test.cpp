@@ -2,19 +2,20 @@
  * Floorplanner_test.cpp
  *
  *  Created on: Nov 1, 2017
- *      Author: Destroyer
+ *      Author: Anish Gupta
  */
 
 #include "Floorplanner.hpp"
 #include "PolishUtilities.hpp"
+#include "RandomizeUtilites.hpp"
 #include "list"
 #include "Node.hpp"
 using namespace std;
 void floorplanUnitTest1();
 void floorplanUnitTest2();
 void floorplannerUnitTest(){
-	//floorplanUnitTest1();
-	floorplanUnitTest2();
+	floorplanUnitTest1();
+	//sfloorplanUnitTest2();
 }
 void floorplanUnitTest1() {
 	list<Size> l1;
@@ -48,15 +49,16 @@ void floorplanUnitTest2() {
 	nodes.push_back(n1);
 	nodes.push_back(n2);
 	nodes.push_back(n3);
+	for(int i = 0 ; i< RandomizeUtilites::getInstance().getRandom(0,2000);i++)
 	nodes.push_back(n4);
 	Floorplanner floorplanner1(nodes);
 	vector<string> expresion = floorplanner1.generateInitialExpression();
 	//PolishUtilities::printExpression(expresion);
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 200; i++) {
 		cout << std::endl;
 		expresion = Floorplanner::move(expresion);
-		cout<<PolishUtilities::isNormalizedExpression(expresion)<<endl;
+		if(!PolishUtilities::isNormalizedExpression(expresion))
+			cout<<"Wrong Expression Found"<<endl;
 		//PolishUtilities::printExpression(expresion);
 	}
-	
 }

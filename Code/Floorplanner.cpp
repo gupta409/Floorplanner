@@ -152,12 +152,11 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 //Makes changes in the polish expression based on the Wong-Liu Moves model
 vector<string> Floorplanner::move(vector<string> currentPolish) {
 	//ToDo:
-	int moveOption = RandomizeUtilites::getInstance().getRandom(3, 3);
-	//int moveOption = 3;
+	int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
+	//Move1: Exchange 2 operands with no other operand in between
 	if (moveOption == 1) {
 		//Pair of operators,operands index
 		pair<vector<int>, vector<int>> indexes = PolishUtilities::getLocations(currentPolish);
-		//Move1: Exchange 2 operands with no other operand in between
 		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, indexes.second.size() - 1);
 		int randomOperandIndex1 = indexes.second[randomPoint];
 		int randomOperandIndex2;
@@ -171,22 +170,27 @@ vector<string> Floorplanner::move(vector<string> currentPolish) {
 		currentPolish[randomOperandIndex1] = currentPolish.at(randomOperandIndex2);
 		currentPolish[randomOperandIndex2] = temp;
 	}
+	//Move2: Complement a series of operators between two operands
 	if (moveOption == 2) {
-		//Move2: Complement a series of operators between two operands
 		vector<pair<int, int>> validOperatorSeries = PolishUtilities::getRepOperators(currentPolish);
-		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validOperatorSeries.size() - 1);
-		for (int i = validOperatorSeries[randomPoint].first; i <= validOperatorSeries[randomPoint].second; i++) {
-			currentPolish[i] = PolishUtilities::getCompliment(currentPolish[i]);
+		//Checks if such operator/operands are present
+		if (validOperatorSeries.size() > 0) {
+			int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validOperatorSeries.size() - 1);
+			for (int i = validOperatorSeries[randomPoint].first; i <= validOperatorSeries[randomPoint].second; i++) {
+				currentPolish[i] = PolishUtilities::getCompliment(currentPolish[i]);
+			}
 		}
 	}
+	//Move3: Exchange adjecnt operator and operand if resultant is still normalized polish expression
 	if (moveOption == 3) {
-		//Move3: Exchange adjecnt operator and operand if resultant is still normalized polish expression
 		vector<int> validIndices = PolishUtilities::getSurroundedOperands(currentPolish);
-		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validIndices.size() - 1);
-
-		string temp = currentPolish.at(validIndices[randomPoint]);
-		currentPolish[validIndices[randomPoint]] = currentPolish.at(validIndices[randomPoint]+1);
-		currentPolish[validIndices[randomPoint]+1] = temp;
+		//Checks if such operator/operands are present
+		if (validIndices.size() > 0) {
+			int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validIndices.size() - 1);
+			string temp = currentPolish.at(validIndices[randomPoint]);
+			currentPolish[validIndices[randomPoint]] = currentPolish.at(validIndices[randomPoint] + 1);
+			currentPolish[validIndices[randomPoint] + 1] = temp;
+		}
 	}
 	return currentPolish;
 }
