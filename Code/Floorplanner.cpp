@@ -135,17 +135,24 @@ double Floorplanner::computeCost(Node* root) {
 bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 	bool isAccepted = false;
 	double boltz;
-	int r;
+	double r;
 	if (deltaCost < 0) {
 		isAccepted = true;
 	}
 	else {
-		boltz = exp(deltaCost/(FloorplannerConstants::getInstance().getBoltzmanConstant()*temperature));
-		r = RandomizeUtilites::getInstance().getRandom(0,1);
+		boltz = exp(-1*(deltaCost/(FloorplannerConstants::getInstance().getBoltzmanConstant()*temperature)));
+		r = RandomizeUtilites::getInstance().getRandomReal(0,1);
+		//cout <<"r:\t"<<r<<"\tboltz:\t"<< boltz << endl;
 		if (r < boltz) {
 			isAccepted = true;
 		}
 	}
+	/*if (isAccepted) {
+		cout << "Accepted"<<endl;
+	}
+	else {
+		cout << "Rejected"<<endl;
+	}*/
 	return isAccepted;
 }
 //Makes changes in the polish expression based on the Wong-Liu Moves model
@@ -205,15 +212,19 @@ void Floorplanner::floorplan() {
 	Node* root;
 	double delCost, newCost, currentCost;
 	currentCost = computeCost(polishToTree(currentExpression));
+	//cout << "Orignal Cost:" << currentCost<<endl;
 	vector<string> newExpression;
 	while(temperature > FloorplannerConstants::getInstance().getFreezingTemperature()){
-		newExpression = move(currentExpression);
-		newCost = computeCost(polishToTree(newExpression));
-		delCost = newCost - currentCost;
-		if (acceptMove(delCost, temperature)) {
-			//Lock changes
-			currentExpression = newExpression;
-			currentCost = newCost;
+		for (int i = 1; i <= FloorplannerConstants::getInstance().getMovesPerStep(); i++) {
+			newExpression = move(currentExpression);
+			newCost = computeCost(polishToTree(newExpression));
+			delCost = newCost - currentCost;
+			if (acceptMove(delCost, temperature)) {
+				cout <<"Temperature:\t"<<temperature<<"\t"<< "DelCost\t" << delCost << endl;
+				//Lock changes
+				currentExpression = newExpression;
+				currentCost = newCost;
+			}
 		}
 		temperature = coolDown(temperature);
 	}

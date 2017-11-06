@@ -10,15 +10,23 @@
 #include "PolishUtilities.hpp"
 #include "RandomizeUtilites.hpp"
 #include "FloorplannerConstants.hpp"
+#include "IOUtilites.hpp"
+#include <list>
 using namespace std;
+void unitTest();
 int main(){
 	//nodeUnitTest();
-	floorplannerUnitTest();
+	//floorplannerUnitTest();
 	//polishUtilitesUnitTest();
 	//randomizeUnitTest();
 	//floorplannerConstantsTest();
+	//IOUtilitiesTest();
+	unitTest();
 	return 0;
 }
-
-
-
+void unitTest() {
+	list<Node> data = IOUtilites::getInstance().readData();
+	Floorplanner myPlanner(data);
+	myPlanner.floorplan();
+	//myPlanner.printNodes();
+}

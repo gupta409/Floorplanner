@@ -20,8 +20,6 @@ public:
 	Floorplanner(list<Node>& nodes);
 	vector<string> generateInitialExpression();
 	static vector<string> move(vector<string> currentPolish);
-	void insertNode(Node& nodeA);
-	void removeNode(string id);
 	void floorplan();
 	void printNodes();
 };

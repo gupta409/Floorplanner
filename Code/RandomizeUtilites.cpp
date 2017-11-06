@@ -2,7 +2,7 @@
  * RandomizeUtilites.cpp
  *
  *  Created on: Nov 3, 2017
- *      Author: Destroyer
+ *      Author: Anish Gupta
  */
 
 #include "RandomizeUtilites.hpp"
@@ -19,5 +19,10 @@ void RandomizeUtilites:: init() {
 int RandomizeUtilites::getRandom(int start, int end) {
 	std::uniform_int_distribution<int> distribution(start, end);
 	int randomNumber = distribution(*this->generator);
+	return randomNumber;
+}
+double RandomizeUtilites::getRandomReal(int start, int end) {
+	std::uniform_real_distribution<double> distribution(start, end);
+	double randomNumber = distribution(*this->generator);
 	return randomNumber;
 }

@@ -8,7 +8,7 @@
 #ifndef RANDOMIZEUTILITES_H_PP
 #define RANDOMIZEUTILITES_H_PP
 #include <random>
-void RandomizeUnitTest();
+void randomizeUnitTest();
 class RandomizeUtilites {
 private:
 	std::default_random_engine* generator;
@@ -16,6 +16,7 @@ private:
 	RandomizeUtilites();
 public:
 	int getRandom(int start, int end);
+	double getRandomReal(int start, int end);
 	//Making class singleton
 	static RandomizeUtilites& getInstance()
 	{
