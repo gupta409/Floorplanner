@@ -203,8 +203,8 @@ vector<string> Floorplanner::move(vector<string> currentPolish) {
 }
 //Returns new temperature
 double Floorplanner::coolDown(double temperature) {
-	return temperature*FloorplannerConstants::getInstance().getCoolDownRate();
-	//return exp(-1*temperature*FloorplannerConstants::getInstance().getCoolDownRate());
+	//return temperature*FloorplannerConstants::getInstance().getCoolDownRate();
+	return exp(-1*FloorplannerConstants::getInstance().getCoolDownRate())*temperature;
 }
 
 //Simulated Annealing performed here
@@ -336,7 +336,7 @@ double Floorplanner::computeNetArea() {
 	return area;
 }
 double Floorplanner::computeBlackArea(Node * root) {
-	double blackArea = computeNetArea() - computeCost(root);
+	double blackArea = computeCost(root)- computeNetArea();
 	return blackArea;
 }
 	

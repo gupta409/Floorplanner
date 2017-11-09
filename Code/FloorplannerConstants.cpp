@@ -8,10 +8,10 @@ FloorplannerConstants::FloorplannerConstants()
 void FloorplannerConstants::loadConstants() {
 	//TODO: load constant form config file
 	coolDownRate = 0.95;
-	startTemperature = 40000;
+	startTemperature = 4000000;
 	freezingTemperature = 0.1;
 	boltzmanConstant = 1;
-	movesPerStep = 5;
+	movesPerStep = 500;
 }
 double FloorplannerConstants::getCoolDownRate() {
 	return coolDownRate;
