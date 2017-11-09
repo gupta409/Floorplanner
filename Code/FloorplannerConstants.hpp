@@ -11,6 +11,7 @@ private:
 	double freezingTemperature;
 	double boltzmanConstant;
 	int movesPerStep;
+	double movesCoolDown;
 public:
 	//Making class singleton
 	static FloorplannerConstants& getInstance()
@@ -24,6 +25,7 @@ public:
 	double getFreezingTemperature();
 	double getBoltzmanConstant();
 	double getStartTemp();
+	double getMovesCoolDown();
 	int getMovesPerStep();
 };
 

@@ -143,17 +143,10 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 	else {
 		boltz = exp(-1*(deltaCost/(FloorplannerConstants::getInstance().getBoltzmanConstant()*temperature)));
 		r = RandomizeUtilites::getInstance().getRandomReal(0,1);
-		//cout <<"r:\t"<<r<<"\tboltz:\t"<< boltz << endl;
 		if (r < boltz) {
 			isAccepted = true;
 		}
 	}
-	/*if (isAccepted) {
-		cout << "Accepted"<<endl;
-	}
-	else {
-		cout << "Rejected"<<endl;
-	}*/
 	return isAccepted;
 }
 //Makes changes in the polish expression based on the Wong-Liu Moves model
@@ -203,21 +196,25 @@ vector<string> Floorplanner::move(vector<string> currentPolish) {
 }
 //Returns new temperature
 double Floorplanner::coolDown(double temperature) {
-	//return temperature*FloorplannerConstants::getInstance().getCoolDownRate();
-	return exp(-1*FloorplannerConstants::getInstance().getCoolDownRate())*temperature;
+	return temperature*FloorplannerConstants::getInstance().getCoolDownRate();
+	//return exp(-1*FloorplannerConstants::getInstance().getCoolDownRate())*temperature;
 }
-
+double Floorplanner::coolDownMoves(double movesPerStep) {
+	//return exp(-1 * FloorplannerConstants::getInstance().getCoolDownRate())*movesPerStep;
+	return FloorplannerConstants::getInstance().getMovesCoolDown()*movesPerStep;
+}
 //Simulated Annealing performed here
 Node* Floorplanner::floorplan() {
 	vector<string> currentExpression = generateInitialExpression();
 	double temperature = FloorplannerConstants::getInstance().getStartTemp();
+	double movesPerStep = FloorplannerConstants::getInstance().getMovesPerStep();
 	Node* root = NULL;
 	double delCost, newCost, currentCost;
 	currentCost = computeCost(polishToTree(currentExpression));
 	//cout << "Orignal Cost:" << currentCost<<endl;
 	vector<string> newExpression;
 	while(temperature > FloorplannerConstants::getInstance().getFreezingTemperature()){
-		for (int i = 1; i <= FloorplannerConstants::getInstance().getMovesPerStep(); i++) {
+		for (int i = 1; i <= movesPerStep; i++) {
 			newExpression = move(currentExpression);
 			newCost = computeCost(polishToTree(newExpression));
 			delCost = newCost - currentCost;
@@ -229,6 +226,7 @@ Node* Floorplanner::floorplan() {
 			}
 		}
 		temperature = coolDown(temperature);
+		movesPerStep = coolDownMoves(movesPerStep);
 	}
 	root = polishToTree(currentExpression);
 	cout << computeCost(root)<<endl;

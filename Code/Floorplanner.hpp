@@ -15,6 +15,7 @@ protected:
 	void cleanupNodes();
 	static bool acceptMove(double deltaCost, double temperature);
 	static double coolDown(double temperature);
+	double coolDownMoves(double movesPerStep);
 public:
 	Node* polishToTree(const vector<string>& experssion);
 	Floorplanner(list<Node>& nodes);
