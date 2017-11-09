@@ -46,8 +46,6 @@ std::list<Node> IOUtilites::readData()
 	std::regex cordsExpression(HARD_CORDS_REGEX);
 	std::regex namesExpression(NAME_REGEX);
 	std::smatch match;
-	
-	//TODO: must be done in while loop
 	while (std::getline(input, tempLine)) {
 		if (std::regex_search(tempLine, match, namesExpression)) {
 			tempId = match.str();
@@ -86,4 +84,14 @@ std::list<Node> IOUtilites::readData()
 		ycords.clear();
 	}
 	return data;
+}
+void IOUtilites::writeData(unordered_map<string, Node*> nodes, double totalArea, double blackArea) {
+	output << "Final area = " << totalArea << endl;
+	output << "Black area = " << blackArea << endl;
+	output << endl;
+	output << "block_name lower_left(x,y)coordinate upper_right(x,y)coordinate"<<endl;
+	//Print node data
+	for (auto it:nodes) {
+		output << it.second->getId() << " (" << it.second->getLLCord().first << "," << it.second->getLLCord().second << ") " << "(" << it.second->getURCord().first << "," << it.second->getURCord().second << ")"<<endl;
+	}
 }

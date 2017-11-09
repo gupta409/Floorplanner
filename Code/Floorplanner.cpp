@@ -8,6 +8,7 @@
 #include "stack"
 #include "string"
 #include <math.h>
+
 //Constructor
 Floorplanner::Floorplanner(list<Node>& nodes) {
 	for (auto it = nodes.begin(); it != nodes.end(); ++it) {
@@ -203,13 +204,14 @@ vector<string> Floorplanner::move(vector<string> currentPolish) {
 //Returns new temperature
 double Floorplanner::coolDown(double temperature) {
 	return temperature*FloorplannerConstants::getInstance().getCoolDownRate();
+	//return exp(-1*temperature*FloorplannerConstants::getInstance().getCoolDownRate());
 }
 
 //Simulated Annealing performed here
-void Floorplanner::floorplan() {
+Node* Floorplanner::floorplan() {
 	vector<string> currentExpression = generateInitialExpression();
 	double temperature = FloorplannerConstants::getInstance().getStartTemp();
-	Node* root;
+	Node* root = NULL;
 	double delCost, newCost, currentCost;
 	currentCost = computeCost(polishToTree(currentExpression));
 	//cout << "Orignal Cost:" << currentCost<<endl;
@@ -228,7 +230,20 @@ void Floorplanner::floorplan() {
 		}
 		temperature = coolDown(temperature);
 	}
-	cout << computeCost(polishToTree(currentExpression))<<endl;
+	root = polishToTree(currentExpression);
+	cout << computeCost(root)<<endl;
+	//Compute co-ordinates
+	if (root != NULL) {
+		root->setLLCord(pair<double, double>(0, 0));
+		root->setURCord(pair<double, double>(root->getOptimumSize().getLength(), root->getOptimumSize().getWidth()));
+		processCords(root);
+		cleanupNodes();
+	}
+	else {
+		//TODO: Throw exception
+		cout << "ERROR: Null root found.";
+	}
+	return root;
 }
 
 //Prints sizing of all the nodes in the tree
@@ -236,6 +251,11 @@ void Floorplanner::printNodes(){
 	for(auto it = this->nodes.begin(); it != this->nodes.end(); ++it){
 		cout<<"ID:\t"<<it->first<<" Length:\t"<<it->second->getOptimumSize().getLength()<<" Width:\t"<<it->second->getOptimumSize().getWidth()<<endl;
 	}
+}
+
+unordered_map<string, Node*> Floorplanner::getNodes()
+{
+	return nodes;
 }
 
 //Function currently generates initial expression of the form AB|C-D|E-F|G|
@@ -266,3 +286,57 @@ vector<string> Floorplanner::generateInitialExpression(){
 	}
 	return expression;
 }
+
+//Function to find and set co-ordinates
+void Floorplanner::processCords(Node* root) {
+	if (root->isEndNode()) {
+		return;
+	}
+	else {
+		Node* left = root->getLeft();
+		Node* right = root->getRight();
+		left->setLLCord(root->getLLCord());
+		right->setURCord(root->getURCord());
+		if (root->getCutType() == Node::HORIZONTAL_CUT) {
+			left->setURCord(pair<double,double>(root->getURCord().first, root->getLLCord().second+left->getOptimumSize().getWidth()));
+			right->setLLCord(pair<double, double>(root->getLLCord().first,root->getLLCord().second+left->getOptimumSize().getWidth()));
+		}
+		if (root->getCutType() == Node::VERTICAL_CUT) {
+			left->setURCord(pair<double,double>(root->getLLCord().first,root->getLLCord().second+left->getOptimumSize().getLength()));
+			right->setLLCord(pair<double, double>(root->getURCord().first - right->getOptimumSize().getLength(), root->getLLCord().second));
+		}
+	}
+	processCords(root->getLeft());
+	processCords(root->getRight());
+}
+void Floorplanner::cleanupNodes() {
+	//Clean data in container
+	int size = nodes.size();
+	int k = 0;
+	auto it = nodes.begin();
+	int j = 0;
+	// erase all odd numbers from c
+	for (int i=size; i>0; i--) {
+		if (!it->second->isEndNode()) {
+			k++;
+			//cout << it->second->getId() << endl;
+			it = this->nodes.erase(it);
+		}
+		else {
+			j++;
+			++it;
+		}
+	}
+}
+double Floorplanner::computeNetArea() {
+	double area = 0;
+	for (auto it:nodes) {
+		area = area + it.second->getOptimumSize().getLength() * it.second->getOptimumSize().getWidth();
+	}
+	return area;
+}
+double Floorplanner::computeBlackArea(Node * root) {
+	double blackArea = computeNetArea() - computeCost(root);
+	return blackArea;
+}
+	

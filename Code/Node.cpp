@@ -14,6 +14,8 @@ Node::Node(const std::string& id, double softArea, double softMinAspect, double 
 	this->parent = NULL;
 	this->left = NULL;
 	this->right = NULL;
+	this->llCord= pair<double, double>(0, 0);
+	this->urCord = pair<double, double>(0, 0);
 }
 //Constructor to make hard blocks
 Node::Node(const string& id, list<Size>& sizeOptions){
@@ -27,17 +29,21 @@ Node::Node(const string& id, list<Size>& sizeOptions){
 	this->softArea = 0;
 	this->softMinAspect = 0;
 	this->softMaxAspect = 0;
+	this->llCord = pair<double, double>(0, 0);
+	this->urCord = pair<double, double>(0, 0);
 }
 //Constructor to make nodes with cut specification
 Node::Node(int cutType, Node* left, Node* right){
 	if(cutType == VERTICAL_CUT){
 		if(left != NULL && right != NULL)
+			//FIXME: Potential space complexity issues here
 			this->id = "v_"+left->getId()+"_"+right->getId();
 		else
 			this->id = "v_invalid";
 		this->cutType = cutType;
 	}else if(cutType == HORIZONTAL_CUT){
 		if(left != NULL && right != NULL)
+			//FIXME: Potential space complexity issues here
 			this->id = "h_"+left->getId()+"_"+right->getId();
 		else
 			this->id = "h_invalid";
@@ -62,6 +68,8 @@ Node::Node(int cutType, Node* left, Node* right){
 	this->softMinAspect = 0;
 	this->softMaxAspect = 0;
 	this->nodeType = HARD;
+	this->llCord = pair<double, double>(0, 0);
+	this->urCord = pair<double, double>(0, 0);
 }
 bool Node::isEndNode() {
 	bool isEnd = false;
@@ -75,7 +83,7 @@ int Node::getCutType() const {
 }
 
 
-const Node* Node::getLeft() const {
+Node* Node::getLeft() const {
 	return left;
 }
 
@@ -91,11 +99,11 @@ void Node::setOptimumSize(Size& optimumSize) {
 	this->optimumSize = optimumSize;
 }
 
-const Node* Node::getParent() const {
+Node* Node::getParent() const {
 	return parent;
 }
 
-const Node* Node::getRight() const {
+Node* Node::getRight() const {
 	return right;
 }
 
@@ -115,10 +123,39 @@ void Node::setParent(Node* parent) {
 	this->parent = parent;
 }
 
+void Node::setLeft(Node * left)
+{
+	this->left = left;
+}
+
+void Node::setRight(Node * right)
+{
+	this->right = right;
+}
+
 double Node::getSoftMinAspect() const {
 	return softMinAspect;
 }
 
 const string& Node::getId() const {
 	return id;
+}
+
+pair<double,double> Node::getLLCord()
+{
+	return llCord;
+}
+
+pair<double, double> Node::getURCord()
+{
+	return urCord;
+}
+
+void Node::setLLCord(pair<double,double> llCord)
+{
+	this->llCord = llCord;
+}
+void Node::setURCord(pair<double, double> urCord)
+{
+	this->urCord = urCord;
 }

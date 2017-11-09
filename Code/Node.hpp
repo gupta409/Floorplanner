@@ -18,6 +18,8 @@ private:
 	Node* right;
 	Size optimumSize;
 	list<Size> sizeOptions;
+	pair<double, double> llCord;
+	pair<double, double> urCord;
 public:
 	//Constructors
 	Node(const string& id, double softArea, double softMinAspect, double softMaxAspect);
@@ -30,15 +32,21 @@ public:
 	bool isNodeType() const;
 	const Size& getOptimumSize() const;
 	void setOptimumSize(Size& optimumSize);
-	const Node* getParent() const;
-	const Node* getRight() const;
-	const Node* getLeft() const;
+	Node* getParent() const;
+	Node* getRight() const;
+	Node* getLeft() const;
 	list<Size>& getSizeOptions() ;
 	double getSoftArea() const;
 	double getSoftMaxAspect() const;
 	double getSoftMinAspect() const;
 	void setParent(Node* parent);
+	void setLeft(Node* left);
+	void setRight(Node* right);
 	const string& getId() const;
+	pair<double,double> getLLCord();
+	pair<double,double> getURCord();
+	void setLLCord(pair<double, double> xCord);
+	void setURCord(pair<double, double> yCord);
 	//Static Constants
 	static const int VERTICAL_CUT = 1;
 	static const int HORIZONTAL_CUT = 2;

@@ -8,6 +8,7 @@
 #ifndef IOUTILITES_HPP_
 #define IOUTILITES_HPP_
 #include "vector"
+#include <unordered_map>
 #include <fstream>
 #include <regex>
 #include "Node.hpp"
@@ -24,7 +25,7 @@ private:
 	virtual ~IOUtilites();
 public:
 	std::list<Node> readData();
-	void writeData();
+	void writeData(unordered_map<string, Node*> nodes, double totalArea, double blackArea);
 	//Making class singleton
 	static IOUtilites& getInstance()
 	{

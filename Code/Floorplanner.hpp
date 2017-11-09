@@ -12,16 +12,21 @@ private:
 	
 protected:
 	Node* sizeNodes(Node &nodeA, Node &nodeB, int cutType);
-	Node* polishToTree(const vector<string>& experssion);
-	double computeCost(Node* root);
+	void cleanupNodes();
 	static bool acceptMove(double deltaCost, double temperature);
 	static double coolDown(double temperature);
 public:
+	Node* polishToTree(const vector<string>& experssion);
 	Floorplanner(list<Node>& nodes);
 	vector<string> generateInitialExpression();
+	void processCords(Node * root);
 	static vector<string> move(vector<string> currentPolish);
-	void floorplan();
+	Node* floorplan();
 	void printNodes();
+	unordered_map<string, Node*> getNodes();
+	double computeNetArea();
+	double computeBlackArea(Node* root);
+	double computeCost(Node* root);
 };
 
 
