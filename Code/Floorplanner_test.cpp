@@ -14,10 +14,12 @@ using namespace std;
 void floorplanUnitTest1();
 void floorplanUnitTest2();
 void floorplanUnitTest3();
+void floorplanUnitTest4();
 void floorplannerUnitTest(){
-	floorplanUnitTest1();
+	//floorplanUnitTest1();
 	//floorplanUnitTest2();
-	floorplanUnitTest3();
+	//floorplanUnitTest3();
+	floorplanUnitTest4();
 }
 void floorplanUnitTest1() {
 	list<Size> l1;
@@ -81,4 +83,36 @@ void floorplanUnitTest3() {
 	cout << endl;
 	floorplanner1.floorplan();
 	floorplanner1.processCords(floorplanner1.polishToTree(expresion));
+}
+void floorplanUnitTest4() {
+	list<Size> l1;
+	Size s(1, 2);
+	l1.push_back(s);
+	Node n1("hard1", l1);
+	Node n2("hard2", l1);
+	Node n3("hard3", l1);
+	Node n4("hard4", l1);
+	Node n5("hard5", l1);
+	Node n6("hard6", l1);
+	list<Node> nodes;
+	nodes.push_back(n1);
+	nodes.push_back(n2);
+	nodes.push_back(n3);
+	nodes.push_back(n4);
+	nodes.push_back(n5);
+	nodes.push_back(n6);
+	Floorplanner floorplanner1(nodes);
+	vector<string> expression = floorplanner1.generateInitialExpression();
+	PolishUtilities::printExpression(expression);
+	Node* root = floorplanner1.polishToTree(expression);
+	expression = floorplanner1.fastMove(expression);
+	cout << endl;
+	PolishUtilities::printExpression(expression);
+	for (int i = 0; i < 1000; i++) {
+		cout << std::endl;
+		expression = floorplanner1.fastMove(expression);
+		//if(!PolishUtilities::isNormalizedExpression(expresion))
+		//cout<<"Wrong Expression Found"<<endl;
+		PolishUtilities::printExpression(expression);
+	}
 }

@@ -16,7 +16,9 @@ protected:
 	static bool acceptMove(double deltaCost, double temperature);
 	static double coolDown(double temperature);
 	double coolDownMoves(double movesPerStep);
+	void Floorplanner::sizeNode(Node* parent);
 public:
+	void swapNodes(Node* a, Node* b);
 	Node* polishToTree(const vector<string>& experssion);
 	Floorplanner(list<Node>& nodes);
 	vector<string> generateInitialExpression();
@@ -28,6 +30,7 @@ public:
 	double computeNetArea();
 	double computeBlackArea(Node* root);
 	double computeCost(Node* root);
+	vector<string> fastMove(vector<string> currentPolish);
 };
 
 

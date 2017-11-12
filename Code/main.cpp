@@ -16,12 +16,12 @@ using namespace std;
 void unitTest();
 int main(){
 	//nodeUnitTest();
-	//floorplannerUnitTest();
+	floorplannerUnitTest();
 	//polishUtilitesUnitTest();
 	//randomizeUnitTest();
 	//floorplannerConstantsTest();
 	//IOUtilitiesTest();
-	unitTest();
+	//unitTest();
 	return 0;
 }
 void unitTest() {

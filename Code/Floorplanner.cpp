@@ -160,7 +160,7 @@ vector<string> Floorplanner::move(vector<string> currentPolish) {
 		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, indexes.second.size() - 1);
 		int randomOperandIndex1 = indexes.second[randomPoint];
 		int randomOperandIndex2;
-		if (randomPoint < indexes.second.size() - 1) {
+		if (randomPoint <indexes.second.size() - 1) {
 			randomOperandIndex2 = indexes.second[randomPoint + 1];
 		}
 		else {
@@ -287,6 +287,10 @@ vector<string> Floorplanner::generateInitialExpression(){
 
 //Function to find and set co-ordinates
 void Floorplanner::processCords(Node* root) {
+	if (root == NULL) {
+		cout << "processCords(): NULL input given"<<endl;
+		return;
+	}
 	if (root->isEndNode()) {
 		return;
 	}
@@ -338,3 +342,280 @@ double Floorplanner::computeBlackArea(Node * root) {
 	return blackArea;
 }
 	
+//Makes changes in the polish expression based on the Wong-Liu Moves model
+vector<string> Floorplanner::fastMove(vector<string> currentPolish) {
+	Node* sizingNode = NULL;
+	//int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
+	int moveOption = 3;
+	//cout << moveOption << endl;
+	//Move1: Exchange 2 operands with no other operand in between
+	if (moveOption == 1) {
+		//Pair of operators,operands index
+		pair<vector<int>, vector<int>> indexes = PolishUtilities::getLocations(currentPolish);
+		int randomPoint = RandomizeUtilites::getInstance().getRandom(0, indexes.second.size() - 1);
+		int randomOperandIndex1 = indexes.second[randomPoint];
+		int randomOperandIndex2;
+		if (randomPoint <indexes.second.size() - 1) {
+			randomOperandIndex2 = indexes.second[randomPoint + 1];
+		}
+		else {
+			randomOperandIndex2 = indexes.second[randomPoint - 1];
+		}
+		//Making changes in tree
+		Node* operand1 = nodes.find(currentPolish.at(randomOperandIndex1))->second;
+		Node* operand2 = nodes.find(currentPolish.at(randomOperandIndex2))->second;
+		//Swap nodes
+		swapNodes(operand1,operand2);
+		//Size parent1 and parent2
+		sizeNode(operand1->getParent());
+		sizeNode(operand2->getParent());
+		//FIXME: Not needed
+		//Making changes in polish
+		string temp = currentPolish.at(randomOperandIndex1);
+		currentPolish[randomOperandIndex1] = currentPolish.at(randomOperandIndex2);
+		currentPolish[randomOperandIndex2] = temp;
+	}
+	//Move2: Complement a series of operators between two operands
+	/*if (moveOption == 2) {
+		vector<pair<int, int>> validOperatorSeries = PolishUtilities::getRepOperators(currentPolish);
+		//Checks if such operator are present
+		if (validOperatorSeries.size() > 0) {
+			int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validOperatorSeries.size() - 1);
+			for (int i = validOperatorSeries[randomPoint].first; i <= validOperatorSeries[randomPoint].second; i++) {
+				currentPolish[i] = PolishUtilities::getCompliment(currentPolish[i]);
+			}
+		}
+	}*/
+	//Move3: Exchange adjecnt operator and operand if resultant is still normalized polish expression
+	if (moveOption == 3) {
+		vector<int> validIndices = PolishUtilities::getSurroundedOperands(currentPolish);
+		//Checks if such operator/operands are present
+		if (validIndices.size() > 0) {
+			int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validIndices.size() - 1);
+			//Make changes in tree
+			Node* operand1;
+			//Check if node is an operand only
+			if (!PolishUtilities::isValidCut(currentPolish[validIndices[randomPoint] + 1]))
+				operand1 = nodes.find(currentPolish[validIndices[randomPoint] + 1])->second;
+			else {
+				//If operator found
+				if (!PolishUtilities::isValidCut(currentPolish[validIndices[randomPoint]])) 
+					operand1 = nodes.find(currentPolish[validIndices[randomPoint]])->second;
+				else {
+					cout << "fastMove(): MOVE 3: Invalid exchange asked"<<endl;
+					return currentPolish;
+				}
+			}
+			Node* operand2 = NULL;
+			//Find second operand
+			if (operand1->isLeftChild()) {
+				//operand 1 is left node
+				if (!operand1->getParent()->getRight()->isEndNode()) {
+					//AB|C- like case1
+					operand2 = operand1->getParent()->getRight()->getLeft();
+					swapNodes(operand1, operand2);
+					operand1 = operand1->getParent()->getRight();
+					swapNodes(operand1, operand2);
+					//Resize parents
+					sizeNode(operand1->getParent());
+					sizeNode(operand2->getParent());
+				}
+				else {
+					//FIXME: Surely some issue here
+					//AB|CD-| like case exchange D
+					if (operand1->getParent()->isLeftChild()) {
+						if (operand1->getParent()->getParent() != NULL) {
+							operand2 = operand1->getParent()->getParent()->getRight();
+							swapNodes(operand1, operand2);
+							operand1 = operand1->getParent()->getLeft();
+							swapNodes(operand1, operand2);
+							//Resize parents
+							sizeNode(operand1->getParent());
+							sizeNode(operand2->getParent());
+						}
+						else {
+							cout << "Invalid move 3";
+							return currentPolish;
+						}
+					}
+					else if (operand1->getParent()->isRightChild()) {
+						if (operand1->getParent()->getParent() != NULL) {
+							operand2 = operand1->getParent()->getParent()->getLeft();
+							swapNodes(operand1, operand2);
+							operand1 = operand1->getParent()->getRight();
+							swapNodes(operand1, operand2);
+							//Resize parents
+							sizeNode(operand1->getParent());
+							sizeNode(operand2->getParent());
+						}
+						else {
+							cout << "Invalid move 3";
+							return currentPolish;
+						}
+					}
+				}
+			}else if (operand1->isRightChild()) {
+				//operand 1 is right node
+				if (!operand1->getParent()->getLeft()->isEndNode()) {
+					//AB|C- like case
+					operand2 = operand1->getParent()->getLeft()->getRight();
+					swapNodes(operand1, operand2);
+					operand1 = operand1->getParent()->getLeft();
+					swapNodes(operand1, operand2);
+					//Resize parents
+					sizeNode(operand1->getParent());
+					sizeNode(operand2->getParent());
+				}
+				else {
+					//FIXME: Surely some issue here
+					//AB|CD-| like case exchange D
+					if (operand1->getParent()->isLeftChild()) {
+						if (operand1->getParent()->getParent() != NULL) {
+							operand2 = operand1->getParent()->getParent()->getRight();
+							swapNodes(operand1, operand2);
+							operand1 = operand1->getParent()->getLeft();
+							swapNodes(operand1, operand2);
+							//Resize parents
+							sizeNode(operand1->getParent());
+							sizeNode(operand2->getParent());
+						}
+						else {
+							cout << "Invalid move 3";
+							return currentPolish;
+						}
+					}
+					else if (operand1->getParent()->isRightChild()) {
+						if (operand1->getParent()->getParent() != NULL) {
+							operand2 = operand1->getParent()->getParent()->getLeft();
+							swapNodes(operand1, operand2);
+							operand1 = operand1->getParent()->getRight();
+							swapNodes(operand1, operand2);
+							//Resize parents
+							sizeNode(operand1->getParent());
+							sizeNode(operand2->getParent());
+						}
+						else {
+							cout << "Invalid move 3";
+							return currentPolish;
+						}
+					}
+				}
+			}
+			else {
+				cout << "Invalid Move 3 asked for";
+				return currentPolish;
+			}
+			
+			//Change polish
+			string temp = currentPolish.at(validIndices[randomPoint]);
+			currentPolish[validIndices[randomPoint]] = currentPolish.at(validIndices[randomPoint] + 1);
+			currentPolish[validIndices[randomPoint] + 1] = temp;
+		}
+	}
+	return currentPolish;
+}
+//Swaps any two nodes of the tree
+void Floorplanner::swapNodes(Node* a, Node* b) {
+	if (a != NULL && b != NULL) {
+		Node* parentA = a->getParent();
+		Node* parentB = b->getParent();
+		if (parentA !=NULL && parentB != NULL) {
+			if (parentA == parentB) {
+				if (a->isLeftChild() && b->isRightChild()) {
+					parentA->setLeft(b);
+					parentA->setRight(a);
+				}
+				else {
+					parentA->setLeft(a);
+					parentA->setRight(b);
+				}
+			}
+			else {
+				//Change left node of parent of a
+				if (a->isLeftChild()) {
+					parentA->setLeft(b);
+				}
+				else {
+					//Change right node of parent of a
+					if (a->isRightChild()) {
+						parentA->setRight(b);
+					}
+					else {
+						cout << endl << "swapNodes(): Invalid child input" << endl;
+					}
+				}
+				//Change left node of parent of b
+				if (b->isLeftChild()) {
+					parentB->setLeft(a);
+				}
+				else {
+					//Change right node of parent of b
+					if (b->isRightChild()) {
+						parentB->setRight(a);
+					}
+					else {
+						cout << endl << "swapNodes(): Invalid child input" << endl;
+					}
+				}
+			}
+		
+			//Change parent of a
+			a->setParent(parentB);
+			//Change parent of b
+			b->setParent(parentA);
+		}
+		else {
+			cout << "swapNodes(): Parents are null";
+		}
+	}
+	else {
+		cout << "swapNodes(): Node A or Node B is NULL";
+	}
+}
+//Re-size nodes
+void Floorplanner::sizeNode(Node* root) {
+	Node* parent = root->getParent();
+	if (parent != NULL) {
+		int cutType = parent->getCutType();
+		Node* nodeA = parent->getLeft();
+		Node* nodeB = parent->getRight();
+		Size defaultSize(0, 0);
+		if (nodeA->isEndNode()) {
+			if (!nodeA->getSizeOptions().empty()) {
+				nodeA->setOptimumSize(nodeA->getSizeOptions().front());
+			}
+			else {
+				nodeA->setOptimumSize(defaultSize);
+			}
+		}
+		if (nodeB->isEndNode()) {
+			if (!nodeB->getSizeOptions().empty()) {
+				nodeB->setOptimumSize(nodeB->getSizeOptions().front());
+			}
+			else {
+				nodeB->setOptimumSize(defaultSize);
+			}
+		}
+		if (cutType == Node::HORIZONTAL_CUT) {
+			double length = max(nodeA->getOptimumSize().getLength(), nodeB->getOptimumSize().getLength());
+			double width = nodeA->getOptimumSize().getWidth() + nodeB->getOptimumSize().getWidth();
+			Size s(length, width);
+			parent->setOptimumSize(s);
+		}
+		else {
+			if (cutType == Node::VERTICAL_CUT) {
+				double length = nodeA->getOptimumSize().getLength() + nodeB->getOptimumSize().getLength();
+				double width = max(nodeA->getOptimumSize().getWidth(), nodeB->getOptimumSize().getWidth());
+				Size s(length, width);
+				parent->setOptimumSize(s);
+			}
+			else {
+				//TODO: Throw exception
+				cout << "Invalid Cut";
+				parent = NULL;
+			}
+		}
+		return sizeNode(parent);
+	}
+	return;
+}

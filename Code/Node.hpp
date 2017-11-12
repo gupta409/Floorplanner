@@ -26,7 +26,9 @@ public:
 	Node(const string& id, list<Size>& sizeOptions);
 	Node(int cutType, Node* left, Node* right);
 	//Property 
-	bool Node::isEndNode();
+	bool isEndNode();
+	bool isLeftChild();
+	bool isRightChild();
 	//Getter Setters
 	int getCutType() const;
 	bool isNodeType() const;

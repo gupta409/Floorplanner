@@ -78,6 +78,22 @@ bool Node::isEndNode() {
 	}
 	return isEnd;
 }
+bool Node::isLeftChild()
+{
+	bool isLeftChild = false;
+	if (this->parent != NULL) {
+		isLeftChild = this->parent->getLeft() == this;
+	}
+	return isLeftChild;
+}
+bool Node::isRightChild()
+{
+	bool isRightChild = false;
+	if (this->parent != NULL) {
+		isRightChild = this->parent->getRight() == this;
+	}
+	return isRightChild;
+}
 int Node::getCutType() const {
 	return cutType;
 }
