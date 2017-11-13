@@ -11,6 +11,22 @@ Node::Node(const std::string& id, double softArea, double softMinAspect, double 
 	this->softArea = softArea;
 	this->softMinAspect = softMinAspect;
 	this->softMaxAspect = softMaxAspect;
+	//Makes 3 sizes out-of the ratios given
+	double l = sqrt(softArea*softMinAspect);
+	double w = sqrt(softArea/softMinAspect);
+	//TODO: Add rotations
+	Size sMin(l,w);
+	this->sizeOptions.push_back(sMin);
+	l = sqrt(softArea*softMaxAspect);
+	w = sqrt(softArea / softMaxAspect);
+	Size sMax(l, w);
+	this->sizeOptions.push_back(sMax);
+	if (softMaxAspect>1 && softMinAspect<1) {
+		double l = sqrt(softArea);
+		double w = sqrt(softArea);
+		Size sOne(l, w);
+		this->sizeOptions.push_back(sOne);
+	}
 	this->parent = NULL;
 	this->left = NULL;
 	this->right = NULL;
@@ -33,7 +49,7 @@ Node::Node(const string& id, list<Size>& sizeOptions){
 	this->urCord = pair<double, double>(0, 0);
 }
 //Constructor to make nodes with cut specification
-Node::Node(int cutType, Node* left, Node* right){
+Node::Node(int cutType, Node* left, Node* right, list<Size>& sizeOptions){
 	if(cutType == VERTICAL_CUT){
 		if(left != NULL && right != NULL)
 			//FIXME: Potential space complexity issues here
@@ -63,6 +79,7 @@ Node::Node(int cutType, Node* left, Node* right){
 	left->setParent(this);
 	this->right = right;
 	right->setParent(this);
+	this->sizeOptions = sizeOptions;
 	this->parent = NULL;
 	this->softArea = 0;
 	this->softMinAspect = 0;
@@ -92,7 +109,7 @@ bool Node::isNodeType() const {
 }
 
 const Size& Node::getOptimumSize() const {
-	return optimumSize;
+	return this->optimumSize;
 }
 
 void Node::setOptimumSize(Size& optimumSize) {

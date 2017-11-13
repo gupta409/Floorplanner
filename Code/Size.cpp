@@ -24,3 +24,18 @@ double Size::getWidth() const {
 void Size::setWidth(double width) {
 	this->width = width;
 }
+
+bool Size::compareLengths(Size a, Size b)
+{
+	return a.getLength() > b.getLength();
+}
+
+bool Size::compareWidths(Size a, Size b)
+{
+	return a.getWidth() > b.getWidth();
+}
+
+bool Size::compareArea(Size a, Size b)
+{
+	return (a.getLength()*a.getWidth())<(b.getLength()*b.getWidth());
+}

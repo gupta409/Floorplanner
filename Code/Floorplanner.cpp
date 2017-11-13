@@ -21,39 +21,58 @@ Node* Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
 	//TODO: Set optimum size based on cut; currently directly using first element of the options: considering only one option for each hard block
 	Node* parent;
 	list<Size> temp;
-	Size defaultSize(0,0);
-	if (nodeA.isEndNode()) {
-		if (!nodeA.getSizeOptions().empty()) {
-			nodeA.setOptimumSize(nodeA.getSizeOptions().front());
-		}
-		else {
-			nodeA.setOptimumSize(defaultSize);
-		}
+	vector<Size> optionsA, optionsB;
+	//Extract options from children
+	for (auto it : nodeA.getSizeOptions()) {
+		optionsA.push_back(Size(it.getLength(), it.getWidth()));
 	}
-	if (nodeB.isEndNode()) {
-		if (!nodeB.getSizeOptions().empty()) {
-			nodeB.setOptimumSize(nodeB.getSizeOptions().front());
-		}
-		else {
-			nodeB.setOptimumSize(defaultSize);
-		}
+	for (auto it : nodeB.getSizeOptions()) {
+		optionsB.push_back(Size(it.getLength(), it.getWidth()));
 	}
 	if(cutType == Node::HORIZONTAL_CUT){
-		parent = new Node(Node::HORIZONTAL_CUT, &nodeA, &nodeB);
-		double length = max(nodeA.getOptimumSize().getLength(),nodeB.getOptimumSize().getLength());
-		double width = nodeA.getOptimumSize().getWidth()+nodeB.getOptimumSize().getWidth();
-		Size s(length,width);
-		parent->setOptimumSize(s);
-		std::pair<string,Node*> new_node(parent->getId(),parent);
+		//Sort sizeOptions based on: Increasing Width(Height), Decreasing Length(Width)
+		//Sort options based on width
+		sort(optionsA.begin(),optionsA.end(),Size::compareLengths);
+		sort(optionsB.begin(), optionsB.end(), Size::compareLengths);
+		//Make new set of options
+		list<Size> options;
+		for (int i = 0, j = 0; i < optionsA.size() && j < optionsB.size();) {
+			double length = max(optionsA[i].getLength(), optionsB[j].getLength());
+			double width = optionsA[i].getWidth() + optionsB[j].getWidth();
+			options.push_back(Size(length,width));
+			if (optionsA[i].getLength() > optionsB[j].getLength()) {
+				i++;
+			}else
+			if (optionsB[j].getLength() >= optionsA[i].getLength()) {
+				j++;
+			}
+		}
+		parent = new Node(Node::HORIZONTAL_CUT, &nodeA, &nodeB, options);
+		string id = parent->getId();
+		pair<string, Node*> new_node(id, parent);
 		this->nodes.insert(new_node);
 	}else
 	if(cutType == Node::VERTICAL_CUT){
-		parent = new Node(Node::VERTICAL_CUT, &nodeA, &nodeB);
-		double length = nodeA.getOptimumSize().getLength()+nodeB.getOptimumSize().getLength();
-		double width = max(nodeA.getOptimumSize().getWidth(),nodeB.getOptimumSize().getWidth());
-		Size s(length,width);
-		parent->setOptimumSize(s);
-		std::pair<string,Node*> new_node(parent->getId(),parent);
+		//Sort sizeOptions based on: Increasing Length(Width), Decreasing Width(Heigth)
+		//Sort options based on lengths
+		sort(optionsA.begin(), optionsA.end(), Size::compareWidths);
+		sort(optionsB.begin(), optionsB.end(), Size::compareWidths);
+		//Make new set of options
+		list<Size> options;
+		for (int i = 0, j = 0; i < optionsA.size() && j < optionsB.size();) {
+			double length = optionsA[i].getLength() + optionsB[j].getLength();
+			double width = max(optionsA[i].getWidth(), optionsB[j].getWidth());
+			options.push_back(Size(length, width));
+			if (optionsA[i].getWidth() > optionsB[j].getWidth()) {
+				i++;
+			}else
+			{
+				j++;
+			}
+		}
+		parent = new Node(Node::VERTICAL_CUT, &nodeA, &nodeB, options);
+		string id = parent->getId();
+		pair<string, Node*> new_node(id, parent);
 		this->nodes.insert(new_node);
 	}else{
 		//TODO: Throw exception
@@ -132,7 +151,7 @@ double Floorplanner::computeCost(Node* root) {
 	cost = root->getOptimumSize().getLength()*root->getOptimumSize().getWidth();
 	return cost;
 }
-//Returns: True/False
+//Returns: True/False based on temperature and deltacost
 bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 	bool isAccepted = false;
 	double boltz;
@@ -229,9 +248,10 @@ Node* Floorplanner::floorplan() {
 		movesPerStep = coolDownMoves(movesPerStep);
 	}
 	root = polishToTree(currentExpression);
-	cout << computeCost(root)<<endl;
 	//Compute co-ordinates
 	if (root != NULL) {
+		assignOptimum(root);
+		cout << computeCost(root) << endl;
 		root->setLLCord(pair<double, double>(0, 0));
 		root->setURCord(pair<double, double>(root->getOptimumSize().getLength(), root->getOptimumSize().getWidth()));
 		processCords(root);
@@ -296,12 +316,12 @@ void Floorplanner::processCords(Node* root) {
 		left->setLLCord(root->getLLCord());
 		right->setURCord(root->getURCord());
 		if (root->getCutType() == Node::HORIZONTAL_CUT) {
-			left->setURCord(pair<double,double>(root->getURCord().first, root->getLLCord().second+left->getOptimumSize().getWidth()));
-			right->setLLCord(pair<double, double>(root->getLLCord().first,root->getLLCord().second+left->getOptimumSize().getWidth()));
+			left->setURCord(pair<double,double>(root->getLLCord().first + left->getOptimumSize().getLength(), root->getLLCord().second+left->getOptimumSize().getWidth()));
+			right->setLLCord(pair<double, double>(root->getURCord().first - right->getOptimumSize().getLength(),root->getURCord().second - right->getOptimumSize().getWidth()));
 		}
 		if (root->getCutType() == Node::VERTICAL_CUT) {
-			left->setURCord(pair<double,double>(root->getLLCord().first,root->getLLCord().second+left->getOptimumSize().getLength()));
-			right->setLLCord(pair<double, double>(root->getURCord().first - right->getOptimumSize().getLength(), root->getLLCord().second));
+			left->setURCord(pair<double,double>(root->getLLCord().first + left->getOptimumSize().getLength(),root->getLLCord().second+left->getOptimumSize().getWidth()));
+			right->setLLCord(pair<double, double>(root->getURCord().first - right->getOptimumSize().getLength(), root->getURCord().second - right->getOptimumSize().getWidth()));
 		}
 	}
 	processCords(root->getLeft());
@@ -338,3 +358,75 @@ double Floorplanner::computeBlackArea(Node * root) {
 	return blackArea;
 }
 	
+void Floorplanner::assignOptimum(Node* root) {
+	if (root->getParent()==NULL) {
+		//FIXME: Poor complexity here
+		vector<Size> options;
+		for (auto it : root->getSizeOptions()) {
+			options.push_back(it);
+		}
+		//Root node found pick size directly by sorting
+		sort(options.begin(), options.end(), Size::compareArea);
+		Size s = options.front();
+		root->setOptimumSize(s);
+	}
+	if(!root->isEndNode()) {
+		//Find optimum of both children nodes
+		Node* left = root->getLeft();
+		Node* right = root->getRight();
+		vector<Size> leftOptions, rightOptions;
+		if (root->getCutType() == Node::HORIZONTAL_CUT) {
+			//Create set of options with child.length <= root.length
+			for (auto it : left->getSizeOptions()) {
+				if (it.getLength() <= root->getOptimumSize().getLength()) {
+					leftOptions.push_back(it);
+				}
+			}
+			for (auto it : right->getSizeOptions()) {
+				if (it.getLength() <= root->getOptimumSize().getLength()) {
+					rightOptions.push_back(it);
+				}
+			}
+			//Traverse through all optons to find the combination which create the same width
+			for (auto lit : leftOptions) {
+				for (auto rit : rightOptions) {
+					if (lit.getWidth() + rit.getWidth() == root->getOptimumSize().getWidth()) {
+						left->setOptimumSize(lit);
+						right->setOptimumSize(rit);
+						break;
+					}
+				}
+			}
+		}
+		else {
+			//Create set of options with child.width <= root.width
+			for (auto it : left->getSizeOptions()) {
+				if (it.getWidth() <= root->getOptimumSize().getWidth()) {
+					leftOptions.push_back(it);
+				}
+			}
+			for (auto it : right->getSizeOptions()) {
+				if (it.getWidth() <= root->getOptimumSize().getWidth()) {
+					rightOptions.push_back(it);
+				}
+			}
+			//Traverse through all optons to find the combination which create the same length as root
+			for (auto lit : leftOptions) {
+				for (auto rit : rightOptions) {
+					if (lit.getLength() + rit.getLength() == root->getOptimumSize().getLength()) {
+						left->setOptimumSize(lit);
+						right->setOptimumSize(rit);
+						break;
+					}
+				}
+			}
+		}
+		//Call assignOptimum() for all daughter nodes
+		assignOptimum(root->getLeft());
+		assignOptimum(root->getRight());
+	}
+	else {
+		//End node found
+		return;
+	}
+}

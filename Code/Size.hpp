@@ -16,6 +16,9 @@ public:
 	void setLength(double length);
 	double getWidth() const;
 	void setWidth(double width);
+	static bool compareLengths(Size a, Size b);
+	static bool compareWidths(Size a, Size b);
+	static bool compareArea(Size a, Size b);
 };
 
 
