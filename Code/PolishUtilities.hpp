@@ -22,6 +22,7 @@ public:
 	static bool isNormalizedExpression(const vector<string>& experssion);
 	static int getCutType(string s);
 	static void printExpression(const vector<string>& experssion);
+	static void printExpressionReverse(const vector<string>& experssion);
 	static string getCompliment(string s);
 	static pair<vector<int>, vector<int>> getLocations(const vector<string>& expression);
 	static vector<pair<int, int>> getRepOperators(const vector<string>& expression);

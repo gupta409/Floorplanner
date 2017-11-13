@@ -31,6 +31,7 @@ public:
 	double computeBlackArea(Node* root);
 	double computeCost(Node* root);
 	vector<string> fastMove(vector<string> currentPolish);
+	void treeToPolish(Node* root, vector<string>& reverseExpression);
 };
 
 

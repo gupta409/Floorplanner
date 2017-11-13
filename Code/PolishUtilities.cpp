@@ -118,6 +118,14 @@ void PolishUtilities::printExpression(const vector<string>& expression) {
 	for (auto it = expression.begin(); it != expression.end(); ++it) {
 		cout << *it;
 	}
+	cout << endl;
+}
+void PolishUtilities::printExpressionReverse(const vector<string>& expression) {
+	for (auto it = expression.end()-1; it != expression.begin(); --it) {
+		cout << *it;
+	}
+	cout << *expression.begin();
+	cout << endl;
 }
 //Returns indexs where operand is present and where operator is present <<vector of operands>,<vecotr of operators>>
 pair<vector<int>, vector<int>> PolishUtilities::getLocations(const vector<string>& expression) {

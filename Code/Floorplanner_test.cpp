@@ -86,12 +86,15 @@ void floorplanUnitTest3() {
 }
 void floorplanUnitTest4() {
 	list<Size> l1;
+	list<Size> l2;
 	Size s(1, 2);
+	Size s1(2, 1);
 	l1.push_back(s);
+	l2.push_back(s1);
 	Node n1("hard1", l1);
 	Node n2("hard2", l1);
-	Node n3("hard3", l1);
-	Node n4("hard4", l1);
+	Node n3("hard3", l2);
+	Node n4("hard4", l2);
 	Node n5("hard5", l1);
 	Node n6("hard6", l1);
 	list<Node> nodes;
@@ -103,16 +106,30 @@ void floorplanUnitTest4() {
 	nodes.push_back(n6);
 	Floorplanner floorplanner1(nodes);
 	vector<string> expression = floorplanner1.generateInitialExpression();
-	PolishUtilities::printExpression(expression);
+	//PolishUtilities::printExpression(expression);
 	Node* root = floorplanner1.polishToTree(expression);
-	expression = floorplanner1.fastMove(expression);
-	cout << endl;
+	vector<string> newExpression;
+	floorplanner1.treeToPolish(root, newExpression);
+	cout << "Achi expression: ";
+	PolishUtilities::printExpressionReverse(newExpression);
+	cout << "Expt expression: ";
 	PolishUtilities::printExpression(expression);
 	for (int i = 0; i < 1000; i++) {
+		//cout << "Moved\n";
+		newExpression.clear();
+		expression = floorplanner1.move(expression);
+		cout <<endl<< floorplanner1.computeCost(floorplanner1.polishToTree(expression)) << "\t";
+		//floorplanner1.treeToPolish(root, newExpression);
+		//PolishUtilities::printExpressionReverse(newExpression);
+		//cout << floorplanner1.computeCost(root) << endl;
+	}
+	//PolishUtilities::printExpression(expression);
+	/*for (int i = 0; i < 1000; i++) {
 		cout << std::endl;
 		expression = floorplanner1.fastMove(expression);
+		cout << floorplanner1.computeCost(root);
 		//if(!PolishUtilities::isNormalizedExpression(expresion))
 		//cout<<"Wrong Expression Found"<<endl;
-		PolishUtilities::printExpression(expression);
-	}
+		//PolishUtilities::printExpression(expression);
+	}*/
 }

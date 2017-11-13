@@ -152,6 +152,7 @@ bool Floorplanner::acceptMove(double deltaCost, double temperature) {
 //Makes changes in the polish expression based on the Wong-Liu Moves model
 vector<string> Floorplanner::move(vector<string> currentPolish) {
 	int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
+	//int moveOption = 3;
 	//cout << moveOption << endl;
 	//Move1: Exchange 2 operands with no other operand in between
 	if (moveOption == 1) {
@@ -345,9 +346,9 @@ double Floorplanner::computeBlackArea(Node * root) {
 //Makes changes in the polish expression based on the Wong-Liu Moves model
 vector<string> Floorplanner::fastMove(vector<string> currentPolish) {
 	Node* sizingNode = NULL;
-	//int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
-	int moveOption = 3;
-	//cout << moveOption << endl;
+	int moveOption = RandomizeUtilites::getInstance().getRandom(1, 3);
+	//int moveOption = 1;
+	cout << moveOption << endl;
 	//Move1: Exchange 2 operands with no other operand in between
 	if (moveOption == 1) {
 		//Pair of operators,operands index
@@ -392,6 +393,7 @@ vector<string> Floorplanner::fastMove(vector<string> currentPolish) {
 		//Checks if such operator/operands are present
 		if (validIndices.size() > 0) {
 			int randomPoint = RandomizeUtilites::getInstance().getRandom(0, validIndices.size() - 1);
+			//int randomPoint = 3;
 			//Make changes in tree
 			Node* operand1;
 			//Check if node is an operand only
@@ -411,11 +413,11 @@ vector<string> Floorplanner::fastMove(vector<string> currentPolish) {
 			if (operand1->isLeftChild()) {
 				//operand 1 is left node
 				if (!operand1->getParent()->getRight()->isEndNode()) {
-					//AB|C- like case1
-					operand2 = operand1->getParent()->getRight()->getLeft();
+					//AB|C- like case1: Currently pointing to C
+					operand2 = operand1->getParent()->getRight()->getRight();
 					swapNodes(operand1, operand2);
-					operand1 = operand1->getParent()->getRight();
-					swapNodes(operand1, operand2);
+					Node* operand3 = operand1->getParent()->getLeft();
+					swapNodes(operand1, operand3);
 					//Resize parents
 					sizeNode(operand1->getParent());
 					sizeNode(operand2->getParent());
@@ -423,44 +425,52 @@ vector<string> Floorplanner::fastMove(vector<string> currentPolish) {
 				else {
 					//FIXME: Surely some issue here
 					//AB|CD-| like case exchange D
-					if (operand1->getParent()->isLeftChild()) {
-						if (operand1->getParent()->getParent() != NULL) {
-							operand2 = operand1->getParent()->getParent()->getRight();
-							swapNodes(operand1, operand2);
-							operand1 = operand1->getParent()->getLeft();
-							swapNodes(operand1, operand2);
-							//Resize parents
+					Node* op1Parent = operand1->getParent();
+					Node* operand3;
+					if (op1Parent->isLeftChild()) {
+							//Get AB|
+							operand2 = op1Parent->getParent()->getRight();
+							//Get C
+							operand3 = op1Parent->getRight();
+							//swap(AB|, C)
+							swapNodes(operand2, operand3);
+							//swap(D,C)
+							swapNodes(operand1, operand3);
+							//swap(parent of C, D)
+							swapNodes(operand3->getParent(), operand1);
+							//Resize parents of D
 							sizeNode(operand1->getParent());
-							sizeNode(operand2->getParent());
-						}
-						else {
-							cout << "Invalid move 3";
-							return currentPolish;
-						}
+							//Resize parent of C
+							sizeNode(operand3->getParent());
 					}
-					else if (operand1->getParent()->isRightChild()) {
-						if (operand1->getParent()->getParent() != NULL) {
-							operand2 = operand1->getParent()->getParent()->getLeft();
-							swapNodes(operand1, operand2);
-							operand1 = operand1->getParent()->getRight();
-							swapNodes(operand1, operand2);
-							//Resize parents
+					else if (op1Parent->isRightChild()) {
+							//Get AB|
+							operand2 = op1Parent->getParent()->getLeft();
+							//Get C
+							operand3 = op1Parent->getRight();
+							//swap(AB|, C)
+							swapNodes(operand2, operand3);
+							//swap(D,C)
+							swapNodes(operand1, operand3);
+							//swap(parent of C, D)
+							swapNodes(operand3->getParent(), operand1);
+							//Resize parents of D
 							sizeNode(operand1->getParent());
-							sizeNode(operand2->getParent());
-						}
-						else {
-							cout << "Invalid move 3";
-							return currentPolish;
-						}
+							//Resize parent of C
+							sizeNode(operand3->getParent());
+					}
+					else {
+						cout << "fastMove(): Invalid node";
+						return currentPolish;
 					}
 				}
 			}else if (operand1->isRightChild()) {
 				//operand 1 is right node
 				if (!operand1->getParent()->getLeft()->isEndNode()) {
 					//AB|C- like case
-					operand2 = operand1->getParent()->getLeft()->getRight();
+					operand2 = operand1->getParent()->getLeft()->getLeft();
 					swapNodes(operand1, operand2);
-					operand1 = operand1->getParent()->getLeft();
+					Node* operand3 = operand1->getParent()->getRight();
 					swapNodes(operand1, operand2);
 					//Resize parents
 					sizeNode(operand1->getParent());
@@ -469,35 +479,43 @@ vector<string> Floorplanner::fastMove(vector<string> currentPolish) {
 				else {
 					//FIXME: Surely some issue here
 					//AB|CD-| like case exchange D
-					if (operand1->getParent()->isLeftChild()) {
-						if (operand1->getParent()->getParent() != NULL) {
-							operand2 = operand1->getParent()->getParent()->getRight();
-							swapNodes(operand1, operand2);
-							operand1 = operand1->getParent()->getLeft();
-							swapNodes(operand1, operand2);
-							//Resize parents
-							sizeNode(operand1->getParent());
-							sizeNode(operand2->getParent());
-						}
-						else {
-							cout << "Invalid move 3";
-							return currentPolish;
-						}
+					Node* op1Parent = operand1->getParent();
+					Node* operand3;
+					if (op1Parent->isLeftChild()) {
+						//Get AB|
+						operand2 = op1Parent->getParent()->getRight();
+						//Get C
+						operand3 = op1Parent->getLeft();
+						//swap(AB|, C)
+						swapNodes(operand2, operand3);
+						//swap(D,C)
+						swapNodes(operand1, operand3);
+						//swap(parent of C, D)
+						swapNodes(operand3->getParent(), operand1);
+						//Resize parents of D
+						sizeNode(operand1->getParent());
+						//Resize parent of C
+						sizeNode(operand3->getParent());
 					}
-					else if (operand1->getParent()->isRightChild()) {
-						if (operand1->getParent()->getParent() != NULL) {
-							operand2 = operand1->getParent()->getParent()->getLeft();
-							swapNodes(operand1, operand2);
-							operand1 = operand1->getParent()->getRight();
-							swapNodes(operand1, operand2);
-							//Resize parents
-							sizeNode(operand1->getParent());
-							sizeNode(operand2->getParent());
-						}
-						else {
-							cout << "Invalid move 3";
-							return currentPolish;
-						}
+					else if (op1Parent->isRightChild()) {
+						//Get AB|
+						operand2 = op1Parent->getParent()->getLeft();
+						//Get C
+						operand3 = op1Parent->getLeft();
+						//swap(AB|, C)
+						swapNodes(operand2, operand3);
+						//swap(D,C)
+						swapNodes(operand1, operand3);
+						//swap(parent of C, D)
+						swapNodes(operand3->getParent(), operand1);
+						//Resize parents of D
+						sizeNode(operand1->getParent());
+						//Resize parent of C
+						sizeNode(operand3->getParent());
+					}
+					else {
+						cout << "fastMove(): Invalid node";
+						return currentPolish;
 					}
 				}
 			}
@@ -616,6 +634,27 @@ void Floorplanner::sizeNode(Node* root) {
 			}
 		}
 		return sizeNode(parent);
+	}
+	return;
+}
+//Utility function to check the working of fastMove(). Converts the tree to root expression form
+void Floorplanner::treeToPolish(Node* root, vector<string>& reverseExpression) {
+	if (root != NULL) {
+		if (root->isEndNode()) {
+			reverseExpression.push_back(root->getId());
+			return;
+			//;
+		}
+		else {
+			if (root->getCutType() == 1) {
+				reverseExpression.push_back("|") ;
+			}
+			if (root->getCutType() == 2) {
+				reverseExpression.push_back("-");
+			}
+			treeToPolish(root->getLeft(),reverseExpression);
+			treeToPolish(root->getRight(),reverseExpression);
+		}
 	}
 	return;
 }
