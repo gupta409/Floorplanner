@@ -148,7 +148,8 @@ Node* Floorplanner::polishToTree(const vector<string>& experssion) {
 //Traverses the tree and gives total area of the floorplan. Returns: Total Area
 double Floorplanner::computeCost(Node* root) {
 	double cost = 0;
-	cost = root->getOptimumSize().getLength()*root->getOptimumSize().getWidth();
+	Size optimumSize = root->getOptimumSize();
+	cost = optimumSize.getLength()*optimumSize.getWidth();
 	return cost;
 }
 //Returns: True/False based on temperature and deltacost
@@ -236,6 +237,7 @@ Node* Floorplanner::floorplan() {
 		for (int i = 1; i <= movesPerStep; i++) {
 			newExpression = move(currentExpression);
 			newCost = computeCost(polishToTree(newExpression));
+			//cout << newCost << endl;
 			delCost = newCost - currentCost;
 			if (acceptMove(delCost, temperature)) {
 				cout <<"Temperature:\t"<<temperature<<"\t"<< "DelCost\t" << delCost << endl;

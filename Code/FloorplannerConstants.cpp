@@ -12,7 +12,7 @@ void FloorplannerConstants::loadConstants() {
 	freezingTemperature = 0.1;
 	boltzmanConstant = 1;
 	movesCoolDown = 0.95;
-	movesPerStep = 5;
+	movesPerStep = 500;
 }
 double FloorplannerConstants::getMovesCoolDown() {
 	return movesCoolDown;
