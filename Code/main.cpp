@@ -5,6 +5,7 @@
  *      Author: Anish Gupta
  */
 #include "iostream"
+#include "ctime"
 #include "Node.hpp"
 #include "Floorplanner.hpp"
 #include "PolishUtilities.hpp"
@@ -21,7 +22,9 @@ int main(){
 	//randomizeUnitTest();
 	//floorplannerConstantsTest();
 	//IOUtilitiesTest();
+	int start = clock();
 	unitTest();
+	cout<<endl<<"Runtime:"<<(clock()-start)/double(CLOCKS_PER_SEC)<<endl;
 	return 0;
 }
 void unitTest() {

@@ -7,11 +7,12 @@ all: ioutilites node size polishutilites randomutilites floorplanner main
 	$(CC) FloorplannerConstants.o Floorplanner.o PolishUtilities.o RandomizeUtilites.o IOUtilites.o Node.o Size.o main.o -o parser
 main: main.cpp
 	$(CC) $(CFLAGS) main.cpp
-floorplanner: node FloorplannerConstants.cpp FloorplannerConstants_test.cpp Floorplanner.cpp Floorplanner_test.cpp
-	$(CC) $(CFLAGS) FloorplannerConstants.cpp
-	$(CC) $(CFLAGS) FloorplannerConstants_test.cpp
+floorplanner: node floorplanner_constants Floorplanner.cpp Floorplanner_test.cpp
 	$(CC) $(CFLAGS) Floorplanner.cpp
 	$(CC) $(CFLAGS) Floorplanner_test.cpp
+floorplanner_constants: ioutilites FloorplannerConstants.cpp
+	$(CC) $(CFLAGS) FloorplannerConstants.cpp
+	$(CC) $(CFLAGS) FloorplannerConstants_test.cpp
 polishutilites: PolishUtilities.cpp PolishUtilites_test.cpp
 	$(CC) $(CFLAGS) PolishUtilities.cpp
 	$(CC) $(CFLAGS) PolishUtilites_test.cpp

@@ -13,6 +13,8 @@
 void IOUtilites::steupConnection(){
 	input.open(inputFile);
 	output.open(outputFile);
+	dumpStream.open(dumpFile);
+	configStream.open(configFile);
 }
 void IOUtilites::closeConnection() {
 	if (input.is_open()) {
@@ -21,10 +23,19 @@ void IOUtilites::closeConnection() {
 	if (output.is_open()) {
 		output.close();
 	}
+	if (dumpStream.is_open()) {
+		dumpStream.close();
+	}
+	if (configStream.is_open()) {
+		configStream.close();
+	}
 }
 IOUtilites::IOUtilites() {
+	std::cout<<"Here";
 	inputFile = "input.txt";
 	outputFile = "output.txt";
+	dumpFile = "dump.csv";
+	configFile = "constants.cfg";
 	steupConnection();
 }
 IOUtilites::~IOUtilites() {
@@ -48,6 +59,7 @@ std::list<Node> IOUtilites::readData()
 	vector<double> xcords, ycords;
 	std::regex namesExpression(NAME_REGEX);
 	std::smatch match;
+	if(input.good())
 	while (std::getline(input, tempLine)) {
 		if (std::regex_search(tempLine, match, namesExpression)) {
 			tempId = match.str();
@@ -141,4 +153,32 @@ void IOUtilites::writeData(unordered_map<string, Node*> nodes, double totalArea,
 	for (auto it:nodes) {
 		output << it.second->getId() << " (" << it.second->getLLCord().first << "," << it.second->getLLCord().second << ") " << "(" << it.second->getURCord().first << "," << it.second->getURCord().second << ")"<<endl;
 	}
+}
+void IOUtilites::dumpData(string data){
+	dumpStream<<data;
+}
+unordered_map<string, double> IOUtilites::readConfigData(){
+	std::cout<<"Here:)";
+	unordered_map<string, double> data;
+	const string KEY_REGEX = "[a-z]";
+	const string VALUE_REGEX = "\\d+";
+	string tempLine;
+	string tempKey;
+	double tempValue;
+	vector<double> xcords, ycords;
+	std::regex KEY(KEY_REGEX);
+	std::regex VALUE(VALUE_REGEX);
+	std::smatch match;
+	if(configStream.good())
+	while (std::getline(configStream, tempLine)) {
+		if (std::regex_search(tempLine, match, KEY)) {
+			tempKey = match.str();
+			tempLine = match.suffix().str();
+			if (std::regex_search(tempLine, match, VALUE)) {
+				tempValue = std::stod(match.str());
+				tempLine = match.suffix().str();
+				data.insert(std::pair<string, double>(tempKey,tempValue));
+			}
+		}
+}
 }
