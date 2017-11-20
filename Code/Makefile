@@ -2,10 +2,9 @@
 CC= g++
 #comiler flags
 CFLAGS = -c -std=c++11
-EXEFLAGS = -DCURL_STATICLIB -static -lstdc++ -lgcc -lpthread -lcurl
 #make file commands
 all: ioutilites node size polishutilites randomutilites floorplanner main
-	$(CC) FloorplannerConstants.o Floorplanner.o PolishUtilities.o RandomizeUtilites.o IOUtilites.o Node.o Size.o main.o -o test
+	$(CC) FloorplannerConstants.o Floorplanner.o PolishUtilities.o RandomizeUtilites.o IOUtilites.o Node.o Size.o main.o -o parser
 main: main.cpp
 	$(CC) $(CFLAGS) main.cpp
 floorplanner: node FloorplannerConstants.cpp FloorplannerConstants_test.cpp Floorplanner.cpp Floorplanner_test.cpp
@@ -29,5 +28,5 @@ size: Size.cpp
 	$(CC) $(CFLAGS) Size.cpp
 
 clean:
-	rm -rf *o
+	rm -rf *o parser
 	rm -rf *gch
