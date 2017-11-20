@@ -1,0 +1,59 @@
+UCSC blocks 1.0
+# Created      : Fri Dec 08 19:38:39 PST 2000
+# User         : huaizhi@shawnee
+# Platform     : SunOS 5.8 sparc
+
+NumSoftRectangularBlocks : 50
+NumHardRectilinearBlocks : 0
+
+sb0 softrectangular 9024 0.300 3.000
+sb1 softrectangular 2028 0.300 3.000
+sb2 softrectangular 1976 0.300 3.000
+sb3 softrectangular 2400 0.300 3.000
+sb4 softrectangular 6900 0.300 3.000
+sb5 softrectangular 3712 0.300 3.000
+sb6 softrectangular 1116 0.300 3.000
+sb7 softrectangular 4095 0.300 3.000
+sb8 softrectangular 3040 0.300 3.000
+sb9 softrectangular 2752 0.300 3.000
+sb10 softrectangular 1326 0.300 3.000
+sb11 softrectangular 3440 0.300 3.000
+sb12 softrectangular 2262 0.300 3.000
+sb13 softrectangular 4600 0.300 3.000
+sb14 softrectangular 756 0.300 3.000
+sb15 softrectangular 6912 0.300 3.000
+sb16 softrectangular 1806 0.300 3.000
+sb17 softrectangular 5734 0.300 3.000
+sb18 softrectangular 5040 0.300 3.000
+sb19 softrectangular 2580 0.300 3.000
+sb20 softrectangular 4263 0.300 3.000
+sb21 softrectangular 7144 0.300 3.000
+sb22 softrectangular 5920 0.300 3.000
+sb23 softrectangular 5120 0.300 3.000
+sb24 softrectangular 1782 0.300 3.000
+sb25 softrectangular 7052 0.300 3.000
+sb26 softrectangular 1764 0.300 3.000
+sb27 softrectangular 6975 0.300 3.000
+sb28 softrectangular 3828 0.300 3.000
+sb29 softrectangular 3696 0.300 3.000
+sb30 softrectangular 5208 0.300 3.000
+sb31 softrectangular 3402 0.300 3.000
+sb32 softrectangular 1672 0.300 3.000
+sb33 softrectangular 4788 0.300 3.000
+sb34 softrectangular 2144 0.300 3.000
+sb35 softrectangular 8272 0.300 3.000
+sb36 softrectangular 5166 0.300 3.000
+sb37 softrectangular 3139 0.300 3.000
+sb38 softrectangular 6438 0.300 3.000
+sb39 softrectangular 5704 0.300 3.000
+sb40 softrectangular 936 0.300 3.000
+sb41 softrectangular 1768 0.300 3.000
+sb42 softrectangular 5610 0.300 3.000
+sb43 softrectangular 3570 0.300 3.000
+sb44 softrectangular 6290 0.300 3.000
+sb45 softrectangular 840 0.300 3.000
+sb46 softrectangular 1680 0.300 3.000
+sb47 softrectangular 4131 0.300 3.000
+sb48 softrectangular 5166 0.300 3.000
+sb49 softrectangular 3612 0.300 3.000
+

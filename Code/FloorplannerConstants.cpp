@@ -13,12 +13,12 @@ void FloorplannerConstants::loadConstants() {
 	if(data.find("coolDownRate")!= data.end()){
 		coolDownRate = data.find("coolDownRate")->second;
 	}else{
-		coolDownRate = 0.90;
+		coolDownRate = 0.95;
 	}
 	if(data.find("startTemperature")!= data.end()){
 		startTemperature = data.find("startTemperature")->second;
 	}else{
-		startTemperature = 5000;
+		startTemperature = 25000;
 	}
 	if(data.find("freezingTemperature")!= data.end()){
 		freezingTemperature = data.find("freezingTemperature")->second;
@@ -28,12 +28,17 @@ void FloorplannerConstants::loadConstants() {
 	if(data.find("movesCoolDown")!= data.end()){
 		movesCoolDown = data.find("movesCoolDown")->second;
 	}else{
-		movesCoolDown = 0.95;
+		movesCoolDown = 0.99;
 	}
 	if(data.find("movesPerStep")!= data.end()){
 		movesPerStep = data.find("movesPerStep")->second;
 	}else{
 		movesPerStep = 500;
+	}
+	if(data.find("boltzmanConstant")!= data.end()){
+		boltzmanConstant = data.find("boltzmanConstant")->second;
+	}else{
+		boltzmanConstant = 1;
 	}
 }
 double FloorplannerConstants::getMovesCoolDown() {

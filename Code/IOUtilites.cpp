@@ -32,8 +32,9 @@ void IOUtilites::closeConnection() {
 }
 IOUtilites::IOUtilites() {
 	//Get input file name
-	std::cout<<"Enter the input file name: ";
-	std::cin>>inputFile;
+	//std::cout<<"Enter the input file name: ";
+	//std::cin>>inputFile;
+	inputFile = "n300soft.blocks";
 	string temp = "";
 	std::regex fileName("[\\w\\d]+");
 	std::smatch match;
@@ -174,7 +175,7 @@ void IOUtilites::dumpData(string data){
 unordered_map<string, double> IOUtilites::readConfigData(){
 	unordered_map<string, double> data;
 	const string KEY_REGEX = "[a-z]\\w+";
-	const string VALUE_REGEX = "\\d+";
+	const string VALUE_REGEX = "[\\d.\\d]+";
 	string tempLine;
 	string tempKey;
 	double tempValue;

@@ -23,9 +23,9 @@ private:
 	ifstream configStream;
 	ofstream output;
 	ofstream dumpStream;
+	IOUtilites();
 	void steupConnection();
 	void closeConnection();
-	IOUtilites();
 	virtual ~IOUtilites();
 public:
 	std::list<Node> readData();

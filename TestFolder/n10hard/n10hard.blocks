@@ -1,0 +1,11 @@
+UCSC blocks 1.0
+# Created      : Fri Dec 08 19:15:43 PST 2000
+# User         : huaizhi@shawnee
+# Platform     : SunOS 5.8 sparc
+
+NumSoftRectangularBlocks : 0
+NumHardRectilinearBlocks : 10
+
+sb0 hardrectilinear 4 (0, 0) (0, 82) (199, 82) (199, 0)
+sb1 hardrectilinear 4 (0, 0) (0, 105) (229, 105) (229, 0)
+

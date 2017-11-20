@@ -32,3 +32,4 @@ clean:
 	rm -rf *o parser
 	rm -rf *gch
 	rm -rf *out
+	rm -rf *csv
