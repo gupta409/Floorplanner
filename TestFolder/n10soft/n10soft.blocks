@@ -1,0 +1,19 @@
+UCSC blocks 1.0
+# Created      : Fri Dec 08 19:15:43 PST 2000
+# User         : huaizhi@shawnee
+# Platform     : SunOS 5.8 sparc
+
+NumSoftRectangularBlocks : 10
+NumHardRectilinearBlocks : 0
+
+sb0 softrectangular 16318 0.300 3.000
+sb1 softrectangular 24045 0.300 3.000
+sb2 softrectangular 7137 0.300 3.000
+sb3 softrectangular 19038 0.300 3.000
+sb4 softrectangular 18928 0.300 3.000
+sb5 softrectangular 26832 0.300 3.000
+sb6 softrectangular 13284 0.300 3.000
+sb7 softrectangular 42065 0.300 3.000
+sb8 softrectangular 29336 0.300 3.000
+sb9 softrectangular 24696 0.300 3.000
+

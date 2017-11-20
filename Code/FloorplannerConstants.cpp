@@ -1,18 +1,45 @@
 #include "FloorplannerConstants.hpp"
-
-
+#include "IOUtilites.hpp"
+#include "string"
+#include "unordered_map"
 FloorplannerConstants::FloorplannerConstants()
 {
 	loadConstants();
 }
 void FloorplannerConstants::loadConstants() {
-	//TODO: load constant form config file
-	coolDownRate = 0.90;
-	startTemperature = 50;
-	freezingTemperature = 0.1;
-	boltzmanConstant = 1;
-	movesCoolDown = 0.95;
-	movesPerStep = 500;
+	///Load data from config file
+	unordered_map<string,double> data;
+	data = IOUtilites::getInstance().readConfigData();
+	if(data.find("coolDownRate")!= data.end()){
+		coolDownRate = data.find("coolDownRate")->second;
+	}else{
+		coolDownRate = 0.95;
+	}
+	if(data.find("startTemperature")!= data.end()){
+		startTemperature = data.find("startTemperature")->second;
+	}else{
+		startTemperature = 25000;
+	}
+	if(data.find("freezingTemperature")!= data.end()){
+		freezingTemperature = data.find("freezingTemperature")->second;
+	}else{
+		freezingTemperature = 0.1;
+	}
+	if(data.find("movesCoolDown")!= data.end()){
+		movesCoolDown = data.find("movesCoolDown")->second;
+	}else{
+		movesCoolDown = 0.99;
+	}
+	if(data.find("movesPerStep")!= data.end()){
+		movesPerStep = data.find("movesPerStep")->second;
+	}else{
+		movesPerStep = 500;
+	}
+	if(data.find("boltzmanConstant")!= data.end()){
+		boltzmanConstant = data.find("boltzmanConstant")->second;
+	}else{
+		boltzmanConstant = 1;
+	}
 }
 double FloorplannerConstants::getMovesCoolDown() {
 	return movesCoolDown;

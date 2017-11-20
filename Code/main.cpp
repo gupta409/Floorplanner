@@ -4,7 +4,9 @@
  *  Created on: Oct 31, 2017
  *      Author: Anish Gupta
  */
+#include "fstream"
 #include "iostream"
+#include "ctime"
 #include "Node.hpp"
 #include "Floorplanner.hpp"
 #include "PolishUtilities.hpp"
@@ -15,19 +17,32 @@
 using namespace std;
 void unitTest();
 int main(){
-	//nodeUnitTest();
-	//floorplannerUnitTest();
-	//polishUtilitesUnitTest();
-	//randomizeUnitTest();
-	//floorplannerConstantsTest();
-	//IOUtilitiesTest();
-	unitTest();
-	return 0;
+	try {
+		unitTest();
+		return 0;
+	}
+	catch (...) {
+		cout << "EXCEPTION!!";
+	}
 }
 void unitTest() {
+	ofstream output;
+	output.open("stats.txt");
 	list<Node> data = IOUtilites::getInstance().readData();
-	Floorplanner myPlanner(data);
-	Node* root = myPlanner.floorplan();
-	double totalArea = myPlanner.computeCost(root);
-	IOUtilites::getInstance().writeData(myPlanner.getNodes(),totalArea,myPlanner.computeBlackArea(root));
+	double avgPercent = 0, avgRuntime = 0;
+	for(int i=0;i<50;i++){
+		int start = clock();
+		Floorplanner myPlanner(data);
+		Node* root = myPlanner.floorplan();
+		double totalArea = myPlanner.computeCost(root);
+		double blackArea = myPlanner.computeBlackArea(root);
+		IOUtilites::getInstance().writeData(myPlanner.getNodes(),totalArea,blackArea);
+		double runtime = (clock() - start) / double(CLOCKS_PER_SEC);
+		double percent = 100*blackArea/totalArea;
+		output << to_string(runtime) << "," << to_string(percent) << endl;
+		avgPercent = avgPercent + percent;
+		avgRuntime = avgRuntime + runtime;
+	}
+	cout<<"Runtime"<< avgRuntime/50 <<"Area Ratio"<< " \t " << avgPercent/50 <<endl;
+	output.close();
 }
