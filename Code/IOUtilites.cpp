@@ -32,9 +32,8 @@ void IOUtilites::closeConnection() {
 }
 IOUtilites::IOUtilites() {
 	//Get input file name
-	//std::cout<<"Enter the input file name: ";
-	//std::cin>>inputFile;
-	inputFile = "n300soft.blocks";
+	std::cout<<"Enter the input file name: ";
+	std::cin>>inputFile;
 	string temp = "";
 	std::regex fileName("[\\w\\d]+");
 	std::smatch match;
