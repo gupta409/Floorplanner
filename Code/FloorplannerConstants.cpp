@@ -7,6 +7,7 @@ FloorplannerConstants::FloorplannerConstants()
 	loadConstants();
 }
 void FloorplannerConstants::loadConstants() {
+	///Load data from config file
 	unordered_map<string,double> data;
 	data = IOUtilites::getInstance().readConfigData();
 	if(data.find("coolDownRate")!= data.end()){

@@ -149,8 +149,13 @@ Node* Floorplanner::polishToTree(const vector<string>& experssion) {
 //Traverses the tree and gives total area of the floorplan. Returns: Total Area
 double Floorplanner::computeCost(Node* root) {
 	double cost = 0;
-	Size optimumSize = root->getOptimumSize();
-	cost = optimumSize.getLength()*optimumSize.getWidth();
+	if (root != NULL) {
+		Size optimumSize = root->getOptimumSize();
+		cost = optimumSize.getLength()*optimumSize.getWidth();
+	}
+	else {
+		cout << "Null Root found"<<endl;
+	}
 	return cost;
 }
 //Returns: True/False based on temperature and deltacost
@@ -227,6 +232,7 @@ double Floorplanner::coolDownMoves(double movesPerStep) {
 //Simulated Annealing performed here
 Node* Floorplanner::floorplan() {
 	string dumpData = "Temperature, Moves, CurrentCost, DeltaCost";
+	int moveCounter = 0, acceptedMoveCounter = 0;
 	vector<string> currentExpression = generateInitialExpression();
 	double temperature = FloorplannerConstants::getInstance().getStartTemp();
 	double movesPerStep = FloorplannerConstants::getInstance().getMovesPerStep();
@@ -235,21 +241,33 @@ Node* Floorplanner::floorplan() {
 	currentCost = computeCost(polishToTree(currentExpression));
 	//cout << "Orignal Cost:" << currentCost<<endl;
 	vector<string> newExpression;
+	int temp = movesPerStep;
 	while(temperature > FloorplannerConstants::getInstance().getFreezingTemperature()){
+		temp = movesPerStep;
 		for (int i = 1; i <= movesPerStep; i++) {
 			newExpression = move(currentExpression);
 			newCost = computeCost(polishToTree(newExpression));
 			//cout << newCost << endl;
 			delCost = newCost - currentCost;
+			moveCounter++;
+			cout << i<<"\t" <<movesPerStep << endl;
 			if (acceptMove(delCost, temperature)) {
 				dumpData = dumpData + std::to_string(temperature)+"," + std::to_string(movesPerStep) +"," + std::to_string(currentCost)+"," + std::to_string(delCost)+"\n";
-				//cout <<"Temperature:\t"<<temperature<<"\t"<< "DelCost\t" << delCost << endl;
-				cout<<temperature<<","<<movesPerStep<<","<<currentCost<<endl;
+				cout <<"Temperature:\t"<<temperature<<"\t"<< "DelCost\t" << delCost << endl;
 				//Lock changes
 				currentExpression = newExpression;
 				currentCost = newCost;
+				acceptedMoveCounter++;
+				//Dynamic change in MovesPerStep
+				if (delCost<0) {
+					movesPerStep = movesPerStep*1.01;
+				}
+				if (delCost == 0) {
+					movesPerStep = movesPerStep / 0.90;
+				}
 			}
 		}
+		movesPerStep = temp;
 		temperature = coolDown(temperature);
 		movesPerStep = coolDownMoves(movesPerStep);
 	}
@@ -267,6 +285,7 @@ Node* Floorplanner::floorplan() {
 		//TODO: Throw exception
 		cout << "ERROR: Null root found.";
 	}
+	dumpData = dumpData + "\n Attempted Moves: " + std::to_string(moveCounter) + "\n Accepted Moves: " + std::to_string(acceptedMoveCounter);
 	IOUtilites::getInstance().dumpData(dumpData);
 	return root;
 }

@@ -31,19 +31,20 @@ void IOUtilites::closeConnection() {
 	}
 }
 IOUtilites::IOUtilites() {
+	//Get input file name
 	std::cout<<"Enter the input file name: ";
 	std::cin>>inputFile;
-	string temp;
+	string temp = "";
 	std::regex fileName("[\\w\\d]+");
 	std::smatch match;
+	//Make output file name
 	if (std::regex_search(inputFile, match, fileName)) {
 		temp = match.str();
 		outputFile = temp + ".out";
 	}else{
 		outputFile = "output.out";
 	}
-	inputFile = "input.txt";
-	dumpFile = "dump.csv";
+	dumpFile = temp +"dump.csv";
 	configFile = "constants.cfg";
 	steupConnection();
 }
@@ -68,85 +69,89 @@ std::list<Node> IOUtilites::readData()
 	vector<double> xcords, ycords;
 	std::regex namesExpression(NAME_REGEX);
 	std::smatch match;
-	if(input.good())
-	while (std::getline(input, tempLine)) {
-		if (std::regex_search(tempLine, match, namesExpression)) {
-			tempId = match.str();
-			tempLine = match.suffix().str();
-		}
-		if (std::regex_search(tempLine, match, namesExpression)) {
-			blockType = match.str();
-			tempLine = match.suffix().str();
-		}
-		if (blockType.compare(INVALID) != 0 && blockType.compare(HARDBLOCKID) == 0) {
-			//Create hard block
-			std::regex cordsExpression(HARD_CORDS_REGEX);
-			int i = 0;
-			while (std::regex_search(tempLine, match, cordsExpression)) {
-				if (i % 2 ==0) {
-					xcords.push_back(std::stod(match.str()));
-				}
-				else {
-					ycords.push_back(std::stod(match.str()));
-				}
-				i++;
+	if (input.good()) {
+		while (std::getline(input, tempLine)) {
+			if (std::regex_search(tempLine, match, namesExpression)) {
+				tempId = match.str();
 				tempLine = match.suffix().str();
 			}
-			if (i > 0) {
-				tempLength = *max_element(std::begin(xcords), std::end(xcords)) - *min_element(std::begin(xcords), std::end(xcords));
-				tempWidth = *max_element(std::begin(ycords), std::end(ycords)) - *min_element(std::begin(ycords), std::end(ycords));
-				Size s(tempLength, tempWidth);
-				list<Size> options;
-				options.push_back(s);
-				Size s90(tempWidth,tempLength);
-				options.push_back(s90);
-				//Looks for node with same name if already not present
-				if (data.find(tempId)==data.end()) {
-					Node n(tempId, options);
-					data.insert(pair<string,Node>(tempId, n));
+			if (std::regex_search(tempLine, match, namesExpression)) {
+				blockType = match.str();
+				tempLine = match.suffix().str();
+			}
+			if (blockType.compare(INVALID) != 0 && blockType.compare(HARDBLOCKID) == 0) {
+				//Create hard block
+				std::regex cordsExpression(HARD_CORDS_REGEX);
+				int i = 0;
+				while (std::regex_search(tempLine, match, cordsExpression)) {
+					if (i % 2 == 0) {
+						xcords.push_back(std::stod(match.str()));
+					}
+					else {
+						ycords.push_back(std::stod(match.str()));
+					}
+					i++;
+					tempLine = match.suffix().str();
+				}
+				if (i > 0) {
+					tempLength = *max_element(std::begin(xcords), std::end(xcords)) - *min_element(std::begin(xcords), std::end(xcords));
+					tempWidth = *max_element(std::begin(ycords), std::end(ycords)) - *min_element(std::begin(ycords), std::end(ycords));
+					Size s(tempLength, tempWidth);
+					list<Size> options;
+					options.push_back(s);
+					Size s90(tempWidth, tempLength);
+					options.push_back(s90);
+					//Looks for node with same name if already not present
+					if (data.find(tempId) == data.end()) {
+						Node n(tempId, options);
+						data.insert(pair<string, Node>(tempId, n));
+					}
+					else {
+						//Node with same Id is present. Append to options
+						data.find(tempId)->second.getSizeOptions().push_back(s);
+						data.find(tempId)->second.getSizeOptions().push_back(s90);
+					}
+				}
+			}
+			if (blockType.compare(INVALID) != 0 && blockType.compare(SOFTBLOCKID) == 0) {
+				//Create soft block
+				std::regex cordsExpression(SOFT_CORDS_REGEX);
+				double area;
+				double minRatio;
+				double maxRatio;
+				//std::regex_search(tempLine, match, cordsExpression);
+				//Area:
+				if (std::regex_search(tempLine, match, cordsExpression)) {
+					area = std::stod(match.str());
+					tempLine = match.suffix().str();
+				}
+				//Min Aspect Ratio:
+				if (std::regex_search(tempLine, match, cordsExpression)) {
+					minRatio = std::stod(match.str());
+					tempLine = match.suffix().str();
+				}
+				//Max Aspect Ratio:
+				if (std::regex_search(tempLine, match, cordsExpression)) {
+					maxRatio = std::stod(match.str());
+					tempLine = match.suffix().str();
+				}
+				//Add to map
+				if (data.find(tempId) == data.end()) {
+					Node n(tempId, area, minRatio, maxRatio);
+					data.insert(pair<string, Node>(tempId, n));
 				}
 				else {
+					//FIXME: Some error here
 					//Node with same Id is present. Append to options
-					data.find(tempId)->second.getSizeOptions().push_back(s);
-					data.find(tempId)->second.getSizeOptions().push_back(s90);
+					cout << "Malforamtted Input file. Duplicate soft node found";
 				}
 			}
+			xcords.clear();
+			ycords.clear();
 		}
-		if (blockType.compare(INVALID) != 0 && blockType.compare(SOFTBLOCKID) == 0) {
-			//Create soft block
-			std::regex cordsExpression(SOFT_CORDS_REGEX);
-			double area;
-			double minRatio;
-			double maxRatio;
-			//std::regex_search(tempLine, match, cordsExpression);
-			//Area:
-			if (std::regex_search(tempLine, match, cordsExpression)) {
-				area = std::stod(match.str());
-				tempLine = match.suffix().str();
-			}
-			//Min Aspect Ratio:
-			if (std::regex_search(tempLine, match, cordsExpression)) {
-				minRatio = std::stod(match.str());
-				tempLine = match.suffix().str();
-			}
-			//Max Aspect Ratio:
-			if (std::regex_search(tempLine, match, cordsExpression)) {
-				maxRatio = std::stod(match.str());
-				tempLine = match.suffix().str();
-			}
-			//Add to map
-			if (data.find(tempId) == data.end()) {
-				Node n(tempId, area,minRatio,maxRatio);
-				data.insert(pair<string, Node>(tempId, n));
-			}
-			else {
-				//FIXME: Some error here
-				//Node with same Id is present. Append to options
-				cout << "Malforamtted Input file. Duplicate soft node found";
-			}
-		}
-		xcords.clear();
-		ycords.clear();
+	}
+	else {
+		cout << "File not found. Stream not setup" << endl;
 	}
 	for (auto it : data) {
 		returnData.push_back(it.second);
@@ -167,7 +172,6 @@ void IOUtilites::dumpData(string data){
 	dumpStream<<data;
 }
 unordered_map<string, double> IOUtilites::readConfigData(){
-	std::cout<<"HERERERERSAERFADLKFJIIJIJIEJFIEFJEIFJ";
 	unordered_map<string, double> data;
 	const string KEY_REGEX = "[a-z]\\w+";
 	const string VALUE_REGEX = "\\d+";
@@ -178,18 +182,22 @@ unordered_map<string, double> IOUtilites::readConfigData(){
 	std::regex KEY(KEY_REGEX);
 	std::regex VALUE(VALUE_REGEX);
 	std::smatch match;
-	//if(configStream.good())
-	while (std::getline(configStream, tempLine)) {
-		if (std::regex_search(tempLine, match, KEY)) {
-			tempKey = match.str();
-			tempLine = match.suffix().str();
-			if (std::regex_search(tempLine, match, VALUE)) {
-				tempValue = std::stod(match.str());
+	if (configStream.good()) {
+		while (std::getline(configStream, tempLine)) {
+			if (std::regex_search(tempLine, match, KEY)) {
+				tempKey = match.str();
 				tempLine = match.suffix().str();
-				cout<<"\t"<<tempKey<<"\t"<<tempValue<<endl;
-				data.insert(std::pair<string, double>(tempKey,tempValue));
+				if (std::regex_search(tempLine, match, VALUE)) {
+					tempValue = std::stod(match.str());
+					tempLine = match.suffix().str();
+					cout << "\t" << tempKey << "\t" << tempValue << endl;
+					data.insert(std::pair<string, double>(tempKey, tempValue));
+				}
 			}
 		}
+	}
+	else {
+		cout << "Config file not found. Using default configurations."<<endl;
 	}
 	return data;
 }
