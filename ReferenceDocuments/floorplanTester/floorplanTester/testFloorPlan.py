@@ -109,7 +109,7 @@ def check_missing():
         if not hasattr(b, 'area1'):
             print('\tERROR - block', b.name, 'is not found in output')
 	    error =1
-        elif abs(b.area1 - b.area) > 0.0001*b.area:
+        elif abs(b.area1 - b.area) > 0.01*b.area:
             print('\tERROR - For block', b.name, 'area is not matching')
 	    error =1
     if error == 0:
@@ -144,12 +144,15 @@ def check_aspect_ratio():
         if b.type == 'softrectangular':
             width = abs(b.right - b.left)
             length = abs(b.top - b.bottom)
-	    if (1<=b.max) and (1>=b.min):
-               if (width/length != b.max) and (width/length !=b.min) and (width/length != 1):
+            difference_max = abs(b.max - width/length)
+	    difference_min = abs(b.min - width/length)
+	    difference_same = abs(1 - width/length)
+  	    if (1<=b.max) and (1>=b.min):
+               if (difference_max > 0.01) and (difference_min > 0.01) and (difference_same > 0.001):
                   print('\tERROR -', b.name, 'has wrong aspect ratio')
 	          error =1
 	    else:
-	       if (width/length != b.max) and (width/length !=b.min):
+	       if (difference_max > 0.01) and (difference_min > 0.01):
                   print('\tERROR -', b.name, 'has wrong aspect ratio')
 	          error =1
 	   

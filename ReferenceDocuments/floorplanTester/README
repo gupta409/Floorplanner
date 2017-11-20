@@ -6,35 +6,20 @@
 + |_|     |_____|  \___/   \___/  |_| \_\ |_|     |_____| /_/   \_\ |_| \_|        |_|   |_____| |____/    |_|   |_____| |_| \_\  +
 +                                                                                                                           	  + 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
-===================================================================================================================================
-DESCRIPTION:
-===================================================================================================================================
-This script checks if the output floorplan is a valid one. It parses in the input file (eg: n10hard.blocks) and the corresponding 
-output file (eg. n10hard.out) and checks if the output file matches the given format. If the format is wrong it throws an error.
-Apart from this it performs three basic functions:
-1.) check_missing(): 	  This function checks if the output floor plan has accounted for all the blocks mentioned in the input file. 
-		     	  If there are missing blocks it returns the names of the blocks that have not been accounted for.
-2.) check_overlap(): 	  This function checks if there is an overlap between any of the blocks after they have been placed. 
-                     	  If there is an overlap it returns the block names of the blocks between which the overlap exists.
-3.) check_aspect_ratio(): This function checks if the aspect ratio of each block is valid,i.e., it checks if the aspect
-			  ratios of each block takes only one of the possible aspect ratios as mentioned in the input file.
-			  For a hard-macro only two possible aspect ratios exist and a maximum of three possible aspect ratios for
-			  a soft block. As long as the aspect ratio of each block is one of the possible values, this function will 
-			  pass, otherwise it will return the block names of the blocks that have invalid aspect ratios.
+
 ===================================================================================================================================
 INSTRUCTIONS:
 ===================================================================================================================================
 ***********************************************************************************************************************************
 1.) SETUP
 ***********************************************************************************************************************************
-	After downloading and extracting the .tar file to the location you wish, enter the floorplanTester directory	
 	Enter the directory
 		cd floorplanTester
 	
 	Make testFloorPlan.py executable
     		chmod +x testFloorPlan.py
 	
-	Copy the input and ouptut files of the floorplans that you wish to test into the current directory
+	Copy the input and ouptut of your floorplan that you wish to test
 		cp <inputFilePath>/<inputFileName> <outputFilePath>/<outputFileName> ./
 	Eg:	cp ../n10hard.blocks ../n10hard.out ./
 

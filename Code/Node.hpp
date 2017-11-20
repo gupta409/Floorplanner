@@ -3,6 +3,8 @@
 #include "iostream"
 #include <list>
 #include <string>
+#include <cmath>
+#include <float.h>
 using namespace std;
 void nodeUnitTest();
 class Node{
@@ -25,12 +27,12 @@ public:
 	Node(const string& id, double softArea, double softMinAspect, double softMaxAspect);
 	Node(const string& id, list<Size>& sizeOptions);
 	Node(int cutType, Node* left, Node* right, list<Size>& sizeOptions);
-	//Property 
-	bool Node::isEndNode();
+	//Property
+	bool isEndNode();
 	//Getter Setters
 	int getCutType() const;
 	bool isNodeType() const;
-	const Size& getOptimumSize() const;
+	const Size getOptimumSize() const;
 	void setOptimumSize(Size& optimumSize);
 	Node* getParent() const;
 	Node* getRight() const;

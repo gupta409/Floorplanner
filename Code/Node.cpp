@@ -108,7 +108,7 @@ bool Node::isNodeType() const {
 	return nodeType;
 }
 
-const Size& Node::getOptimumSize() const {
+const Size Node::getOptimumSize() const {
 	if (this->parent == NULL) {
 		double minArea = DBL_MAX;
 		Size minSize;
