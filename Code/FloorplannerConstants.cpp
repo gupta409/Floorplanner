@@ -32,7 +32,7 @@ void FloorplannerConstants::loadConstants() {
 	if(data.find("movesPerStep")!= data.end()){
 		movesPerStep = data.find("movesPerStep")->second;
 	}else{
-		movesPerStep = 5000;
+		movesPerStep = 500;
 	}
 }
 double FloorplannerConstants::getMovesCoolDown() {

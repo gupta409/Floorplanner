@@ -7,7 +7,7 @@ all: ioutilites node size polishutilites randomutilites floorplanner main
 	$(CC) FloorplannerConstants.o Floorplanner.o PolishUtilities.o RandomizeUtilites.o IOUtilites.o Node.o Size.o main.o -o parser
 main: main.cpp
 	$(CC) $(CFLAGS) main.cpp
-floorplanner: node floorplanner_constants Floorplanner.cpp Floorplanner_test.cpp
+floorplanner: node floorplanner_constants Floorplanner.cpp Floorplanner_test.cpp ioutilites
 	$(CC) $(CFLAGS) Floorplanner.cpp
 	$(CC) $(CFLAGS) Floorplanner_test.cpp
 floorplanner_constants: ioutilites FloorplannerConstants.cpp

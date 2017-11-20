@@ -2,6 +2,7 @@
 #include "Floorplanner.hpp"
 #include "PolishUtilities.hpp"
 #include "RandomizeUtilites.hpp"
+#include "IOUtilites.hpp"
 #include "FloorplannerConstants.hpp"
 #include "Node.hpp"
 #include "algorithm"
@@ -225,6 +226,7 @@ double Floorplanner::coolDownMoves(double movesPerStep) {
 }
 //Simulated Annealing performed here
 Node* Floorplanner::floorplan() {
+	string dumpData = "Temperature, Moves, CurrentCost, DeltaCost";
 	vector<string> currentExpression = generateInitialExpression();
 	double temperature = FloorplannerConstants::getInstance().getStartTemp();
 	double movesPerStep = FloorplannerConstants::getInstance().getMovesPerStep();
@@ -240,7 +242,9 @@ Node* Floorplanner::floorplan() {
 			//cout << newCost << endl;
 			delCost = newCost - currentCost;
 			if (acceptMove(delCost, temperature)) {
-				cout <<"Temperature:\t"<<temperature<<"\t"<< "DelCost\t" << delCost << endl;
+				dumpData = dumpData + std::to_string(temperature)+"," + std::to_string(movesPerStep) +"," + std::to_string(currentCost)+"," + std::to_string(delCost)+"\n";
+				//cout <<"Temperature:\t"<<temperature<<"\t"<< "DelCost\t" << delCost << endl;
+				cout<<temperature<<","<<movesPerStep<<","<<currentCost<<endl;
 				//Lock changes
 				currentExpression = newExpression;
 				currentCost = newCost;
@@ -263,6 +267,7 @@ Node* Floorplanner::floorplan() {
 		//TODO: Throw exception
 		cout << "ERROR: Null root found.";
 	}
+	IOUtilites::getInstance().dumpData(dumpData);
 	return root;
 }
 
@@ -359,7 +364,7 @@ double Floorplanner::computeBlackArea(Node * root) {
 	double blackArea = computeCost(root)- computeNetArea();
 	return blackArea;
 }
-	
+
 void Floorplanner::assignOptimum(Node* root) {
 	if (root->getParent()==NULL) {
 		//FIXME: Poor complexity here

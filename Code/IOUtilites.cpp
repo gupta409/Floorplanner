@@ -31,9 +31,18 @@ void IOUtilites::closeConnection() {
 	}
 }
 IOUtilites::IOUtilites() {
-	std::cout<<"Here";
+	std::cout<<"Enter the input file name: ";
+	std::cin>>inputFile;
+	string temp;
+	std::regex fileName("[\\w\\d]+");
+	std::smatch match;
+	if (std::regex_search(inputFile, match, fileName)) {
+		temp = match.str();
+		outputFile = temp + ".out";
+	}else{
+		outputFile = "output.out";
+	}
 	inputFile = "input.txt";
-	outputFile = "output.txt";
 	dumpFile = "dump.csv";
 	configFile = "constants.cfg";
 	steupConnection();
@@ -158,9 +167,9 @@ void IOUtilites::dumpData(string data){
 	dumpStream<<data;
 }
 unordered_map<string, double> IOUtilites::readConfigData(){
-	std::cout<<"Here:)";
+	std::cout<<"HERERERERSAERFADLKFJIIJIJIEJFIEFJEIFJ";
 	unordered_map<string, double> data;
-	const string KEY_REGEX = "[a-z]";
+	const string KEY_REGEX = "[a-z]\\w+";
 	const string VALUE_REGEX = "\\d+";
 	string tempLine;
 	string tempKey;
@@ -169,7 +178,7 @@ unordered_map<string, double> IOUtilites::readConfigData(){
 	std::regex KEY(KEY_REGEX);
 	std::regex VALUE(VALUE_REGEX);
 	std::smatch match;
-	if(configStream.good())
+	//if(configStream.good())
 	while (std::getline(configStream, tempLine)) {
 		if (std::regex_search(tempLine, match, KEY)) {
 			tempKey = match.str();
@@ -177,8 +186,10 @@ unordered_map<string, double> IOUtilites::readConfigData(){
 			if (std::regex_search(tempLine, match, VALUE)) {
 				tempValue = std::stod(match.str());
 				tempLine = match.suffix().str();
+				cout<<"\t"<<tempKey<<"\t"<<tempValue<<endl;
 				data.insert(std::pair<string, double>(tempKey,tempValue));
 			}
 		}
-}
+	}
+	return data;
 }

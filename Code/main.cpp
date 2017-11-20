@@ -29,6 +29,7 @@ int main(){
 }
 void unitTest() {
 	list<Node> data = IOUtilites::getInstance().readData();
+	//FloorplannerConstants::getInstance();
 	Floorplanner myPlanner(data);
 	Node* root = myPlanner.floorplan();
 	double totalArea = myPlanner.computeCost(root);
