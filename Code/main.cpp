@@ -30,7 +30,7 @@ void unitTest() {
 	output.open("stats.txt");
 	list<Node> data = IOUtilites::getInstance().readData();
 	double avgPercent = 0, avgRuntime = 0;
-	for(int i=0;i<50;i++){
+	for(int i=0;i<1;i++){
 		int start = clock();
 		Floorplanner myPlanner(data);
 		Node* root = myPlanner.floorplan();
@@ -43,6 +43,6 @@ void unitTest() {
 		avgPercent = avgPercent + percent;
 		avgRuntime = avgRuntime + runtime;
 	}
-	cout<<"Runtime"<< avgRuntime/50 <<"Area Ratio"<< " \t " << avgPercent/50 <<endl;
+	cout<<endl<<"Runtime: "<< avgRuntime <<"Area Ratio"<< " \tPercentBlack: " << avgPercent <<endl;
 	output.close();
 }

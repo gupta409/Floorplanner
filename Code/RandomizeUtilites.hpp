@@ -2,7 +2,7 @@
  * RandomizeUtilites.h
  *
  *  Created on: Nov 3, 2017
- *      Author: Destroyer
+ *      Author: Anish Gupta
  */
 
 #ifndef RANDOMIZEUTILITES_H_PP

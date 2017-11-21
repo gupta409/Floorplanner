@@ -2,7 +2,7 @@
  * IOUtilites_test.cpp
  *
  *  Created on: Nov 5, 2017
- *      Author: Destroyer
+ *      Author: Anish Gupta
  */
 
 #include "IOUtilites.hpp"

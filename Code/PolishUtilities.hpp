@@ -2,7 +2,7 @@
  * PolishUtilities.h
  *
  *  Created on: Nov 2, 2017
- *      Author: Destroyer
+ *      Author: Anish Gupta
  */
 
 #ifndef POLISHUTILITIES_HPP_

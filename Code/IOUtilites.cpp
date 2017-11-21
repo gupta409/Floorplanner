@@ -10,6 +10,7 @@
 #include <istream>
 #include <string>
 #include <regex>
+
 void IOUtilites::steupConnection(){
 	input.open(inputFile);
 	output.open(outputFile);
@@ -32,8 +33,9 @@ void IOUtilites::closeConnection() {
 }
 IOUtilites::IOUtilites() {
 	//Get input file name
-	std::cout<<"Enter the input file name: ";
-	std::cin>>inputFile;
+	//std::cout<<"Enter the input file name: ";
+	//std::cin>>inputFile;
+	inputFile = "n100hard.blocks";
 	string temp = "";
 	std::regex fileName("[\\w\\d]+");
 	std::smatch match;
@@ -143,7 +145,7 @@ std::list<Node> IOUtilites::readData()
 				else {
 					//FIXME: Some error here
 					//Node with same Id is present. Append to options
-					cout << "Malforamtted Input file. Duplicate soft node found";
+					//cout << "Malforamtted Input file. Duplicate soft node found";
 				}
 			}
 			xcords.clear();
@@ -190,14 +192,13 @@ unordered_map<string, double> IOUtilites::readConfigData(){
 				if (std::regex_search(tempLine, match, VALUE)) {
 					tempValue = std::stod(match.str());
 					tempLine = match.suffix().str();
-					cout << "\t" << tempKey << "\t" << tempValue << endl;
 					data.insert(std::pair<string, double>(tempKey, tempValue));
 				}
 			}
 		}
 	}
 	else {
-		cout << "Config file not found. Using default configurations."<<endl;
+		cout << "External Config file not found. Using default configurations."<<endl;
 	}
 	return data;
 }

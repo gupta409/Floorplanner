@@ -231,7 +231,8 @@ double Floorplanner::coolDownMoves(double movesPerStep) {
 }
 //Simulated Annealing performed here
 Node* Floorplanner::floorplan() {
-	string dumpData = "IterationNo,Temperature, Moves, CurrentCost, DeltaCost\n";
+	//string dumpData = "IterationNo,Temperature, Moves, CurrentCost, DeltaCost\n";
+	string dumpData = "Temperature,%AcceptedMove\n";
 	int moveCounter = 0, acceptedMoveCounter = 0;
 	vector<string> currentExpression = generateInitialExpression();
 	double temperature = FloorplannerConstants::getInstance().getStartTemp();
@@ -239,26 +240,39 @@ Node* Floorplanner::floorplan() {
 	Node* root = NULL;
 	double delCost, newCost, currentCost;
 	currentCost = computeCost(polishToTree(currentExpression));
-	//cout << "Orignal Cost:" << currentCost<<endl;
 	vector<string> newExpression;
 	int temp = movesPerStep;
 	int MAX_MOVES = 1000;
 	int MIN_MOVES = 50;
+	std::cout << "Calculating -" << std::flush;
 	while(temperature > FloorplannerConstants::getInstance().getFreezingTemperature()){
 		temp = movesPerStep;
 		for (int i = 1; i <= movesPerStep; i++) {
 			newExpression = move(currentExpression);
 			newCost = computeCost(polishToTree(newExpression));
-			//cout << newCost << endl;
 			delCost = newCost - currentCost;
 			moveCounter++;
+			//Animation for console display
+			if(moveCounter%5 == 0){
+				std::cout << "\b\\" << std::flush;
+			}
+			if(moveCounter%5 == 1){
+				std::cout << "\b|" << std::flush;
+			}
+			if(moveCounter%5 == 2){
+				std::cout << "\b/" << std::flush;
+			}
+			if(moveCounter%5 == 3){
+				std::cout << "\b-" << std::flush;
+			}
+			//If move accepted
 			if (acceptMove(delCost, temperature)) {
+				//Log results
+				acceptedMoveCounter++;
 				dumpData = dumpData+ std::to_string(moveCounter) +","+ std::to_string(temperature)+"," + std::to_string(movesPerStep) +"," + std::to_string(currentCost)+"," + std::to_string(delCost)+"\n";
-				cout <<"Temperature:\t"<<temperature << "\tMoves\t"<<movesPerStep<<"\t"<< "DelCost\t" << delCost << endl;
 				//Lock changes
 				currentExpression = newExpression;
 				currentCost = newCost;
-				acceptedMoveCounter++;
 				//Dynamic change in MovesPerStep
 				if (delCost<0) {
 					if(movesPerStep < MAX_MOVES){

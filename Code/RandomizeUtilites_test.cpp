@@ -2,7 +2,7 @@
  * RandomizeUtilites_test.cpp
  *
  *  Created on: Nov 3, 2017
- *      Author: Destroyer
+ *      Author: Anish Gupta
  */
 
 #include "RandomizeUtilites.hpp"

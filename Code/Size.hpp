@@ -2,7 +2,7 @@
  * size.cpp
  *
  *  Created on: Oct 31, 2017
- *      Author: Destroyer
+ *      Author: Anish Gupta
  */
 #pragma once
 class Size{
@@ -20,6 +20,3 @@ public:
 	static bool compareWidths(Size a, Size b);
 	static bool compareArea(Size a, Size b);
 };
-
-
-
