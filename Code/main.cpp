@@ -43,6 +43,6 @@ void unitTest() {
 		avgPercent = avgPercent + percent;
 		avgRuntime = avgRuntime + runtime;
 	}
-	cout<<endl<<"Runtime: "<< avgRuntime <<"Area Ratio"<< " \tPercentBlack: " << avgPercent <<endl;
+	cout<<endl<<"Runtime: "<< avgRuntime << " \tPercentBlack: " << avgPercent <<endl;
 	output.close();
 }
