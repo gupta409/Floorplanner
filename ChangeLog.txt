@@ -1,0 +1,25 @@
+Plan:
+-------------------
+Modify:	Floorplanner.cpp
+		[-]sizeNodes()	:	not needed as no cuts exist anymore
+		[-]polishToTree():	not needed as no polish expression anymore
+		[M]assignOptimum():	how to work with soft blocks? :/
+		[M]move()
+		[M]computeCost()
+		[M]computeBlackArea()
+		[M]computeNetArea()
+		[+]delCost():		finds delta cost of the seq pair
+		[+]Graph horizontalGraph
+		[+]Graph verticalConstraintGraph
+		
+Add:	Graph.cpp
+		-store all nodes and edges
+		-which container to use?
+	GraphUtilities.cpp
+		+List<T> topologicalSort(Graph<T> g)
+		+List<Node> longestPath(Graph<Node> g)
+	SeqPairUtilities.cpp
+		+Graph<Node> seqPairToGraph(Pair<String,String> sp)
+		+deltaSeqPair(Graph<Node> g, Pair<String,String> oldSp, Pair<String,String> newSp)
+	
+	
