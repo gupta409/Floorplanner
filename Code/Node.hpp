@@ -24,6 +24,8 @@ private:
 	pair<double, double> urCord;
 public:
 	//Constructors
+	Node();
+	Node(std::string id);
 	Node(const string& id, double softArea, double softMinAspect, double softMaxAspect);
 	Node(const string& id, list<Size>& sizeOptions);
 	Node(int cutType, Node* left, Node* right, list<Size>& sizeOptions);

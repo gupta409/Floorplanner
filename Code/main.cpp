@@ -13,22 +13,26 @@
 #include "RandomizeUtilites.hpp"
 #include "FloorplannerConstants.hpp"
 #include "IOUtilites.hpp"
+#include "Vertex.hpp"
 #include <list>
 using namespace std;
-void unitTest();
+//void unitTest();
 int main(){
 	try {
-		unitTest();
+		vertexUnitTest();
 		return 0;
 	}
 	catch (...) {
 		cout << "EXCEPTION!!";
 	}
-}
+}/*
 void unitTest() {
+	//Setup outputstream for analysis
 	ofstream output;
 	output.open("stats.txt");
+	//Read data from input file
 	list<Node> data = IOUtilites::getInstance().readData();
+	//Setup constants for analysis
 	double avgPercent = 0, avgRuntime = 0;
 	for(int i=0;i<1;i++){
 		int start = clock();
@@ -46,3 +50,4 @@ void unitTest() {
 	cout<<endl<<"Runtime: "<< avgRuntime << " \tPercentBlack: " << avgPercent <<endl;
 	output.close();
 }
+*/

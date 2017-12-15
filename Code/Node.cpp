@@ -1,5 +1,13 @@
 #include "Node.hpp"
 #include "string"
+Node::Node()
+{
+	//Default constructor with no implementation
+}
+Node::Node(std::string id)
+{
+	this->id = id;
+}
 //FIXME: optimumSize, sizeOptions cannot be set to null. Must be handled properly for garbage values.
 //FIXME: Implementation of assigning ids to new blocks is poor. May lead to very large id size when large number of blocks are used
 //TODO: Method to create hard blocks from these softblocks
