@@ -1,5 +1,7 @@
+#include <vector>
 #include "Graph.hpp"
-#include <memory>
+#include "Vertex.hpp"
+#include "Edge.hpp"
 Graph::Graph()
 {
 }
@@ -9,7 +11,7 @@ Graph::Graph(Vertex &vertex)
 	this->addVertex(vertex);
 }
 
-Graph::Graph(vector<Vertex> &vertices)
+Graph::Graph(std::vector<Vertex> &vertices)
 {
 	for (Vertex v : vertices) {
 		this->addVertex(v);

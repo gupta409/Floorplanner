@@ -3,10 +3,21 @@ CC= g++
 #comiler flags
 CFLAGS = -c -std=c++11
 #make file commands
-all: ioutilites node size polishutilites randomutilites floorplanner main
-	$(CC) FloorplannerConstants.o Floorplanner.o PolishUtilities.o RandomizeUtilites.o IOUtilites.o Node.o Size.o main.o -o parser
+all: ioutilites node size polishutilites randomutilites floorplanner graph nonslicing main
+	$(CC) FloorplannerConstants.o Floorplanner.o PolishUtilities.o RandomizeUtilites.o IOUtilites.o Node.o Size.o Edge.o Vertex.o Graph.o HorizontalGraph.o VerticalGraph.o GraphOperations.o NonSlicingFloorplanner.o main.o -o parser
 main: main.cpp
 	$(CC) $(CFLAGS) main.cpp
+nonslicing: NonSlicingFloorplanner.cpp
+	$(CC) $(CFLAGS) NonSlicingFloorplanner.cpp
+graph: Edge.cpp Vertex.cpp Graph.cpp GraphOperations.cpp HorizontalGraph.cpp VerticalGraph.cpp Vertex_test.cpp
+	$(CC) $(CFLAGS) Edge.cpp
+	$(CC) $(CFLAGS) Vertex.cpp
+	$(CC) $(CFLAGS) Graph.cpp
+	$(CC) $(CFLAGS) HorizontalGraph.cpp
+	$(CC) $(CFLAGS) VerticalGraph.cpp
+	$(CC) $(CFLAGS) GraphOperations.cpp
+	$(CC) $(CFLAGS) Vertex_test.cpp
+
 floorplanner: node floorplanner_constants Floorplanner.cpp Floorplanner_test.cpp ioutilites
 	$(CC) $(CFLAGS) Floorplanner.cpp
 	$(CC) $(CFLAGS) Floorplanner_test.cpp
