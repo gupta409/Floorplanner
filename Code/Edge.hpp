@@ -5,10 +5,10 @@ class Edge {
 private:
 	Vertex *source;
 	Vertex *destination;
-	int weight;
+	double weight;
 public:
 	Edge();
-	Edge(Vertex &source, Vertex &destination, int weight);
+	Edge(Vertex &source, Vertex &destination, double weight);
 	Vertex* getSource();
 	void setSource(Vertex &source);
 	Vertex* getDestination();

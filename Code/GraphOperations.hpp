@@ -3,13 +3,15 @@
 class GraphOperations
 {
 private:
-	Graph g;
+	Graph* g;
 	vector<Vertex*> topologicalSort;
 	int DFSVisit(Vertex &u, int time);
 public:
-	GraphOperations(Graph g);
+	GraphOperations(Graph* g);
 	Vertex& addSource();
 	Vertex& addSink();
 	void performDFS();
+	double getLongestPath();
+	void printGraph();
 };
 

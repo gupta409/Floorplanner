@@ -3,7 +3,7 @@
 void GraphOperations::performDFS()
 {
 	int time = 0;
-	std::unordered_map<std::string, Vertex*> data = g.getVertices();
+	std::unordered_map<std::string, Vertex*> data = g->getVertices();
 	if (data.empty()) {
 		std::cout << "Empty Graph Found";
 		return;
@@ -42,40 +42,78 @@ int GraphOperations::DFSVisit(Vertex &u, int time)
 	return time;
 }
 
-GraphOperations::GraphOperations(Graph g)
+double GraphOperations::getLongestPath()
+{
+	double distance = 0;
+	std::unordered_map<std::string, Vertex*> data = g->getVertices();
+	if (data.empty()) {
+		std::cout << "Empty Graph Found";
+		return 0.0;
+	}
+	else {
+		performDFS();
+		for (auto it : data) {
+			it.second->init();
+		}
+		for (int i = topologicalSort.size()-1; i >= 0;i--) {
+			std::unordered_map<std::string, Edge*> edgeList = topologicalSort.at(i)->getEdgeList();
+			for (auto e : edgeList) {
+				if (e.second->getDestination()->getDistance() < topologicalSort.at(i)->getDistance() + e.second->getWeight()) {
+					distance = topologicalSort.at(i)->getDistance() + e.second->getWeight();
+					e.second->getDestination()->setDistance(distance);
+				}
+			}
+		}
+	}
+	return distance;
+}
+
+GraphOperations::GraphOperations(Graph* g)
 {
 	this->g = g;
+	addSource();
+	addSink();
 }
 
 Vertex& GraphOperations::addSource()
 {
-	Vertex source(Node("super_source"));
-	std::unordered_map<std::string, Vertex*> data = g.getVertices();
+	Vertex *source = new Vertex(*new Node("super_source"));
+	std::unordered_map<std::string, Vertex*> data = g->getVertices();
 	if (data.empty()) {
 		std::cout << "Empty Graph Found";
 	}
 	else {
-		g.addVertex(source);
+		g->addVertex(*source);
 		for (auto it : data) {
-			g.addEdge(source, *it.second, 0);
+			g->addEdge(*source, *it.second, 0);
 		}
 	}
-	return source;
+	return *source;
 }
 Vertex& GraphOperations::addSink()
 {
-	Vertex sink(Node("super_sink"));
-	std::unordered_map<std::string, Vertex*> data = g.getVertices();
+	Vertex *sink = new Vertex(*new Node("super_sink"));
+	std::unordered_map<std::string, Vertex*> data = g->getVertices();
 	if (data.empty()) {
 		std::cout << "Empty Graph Found";
 	}
 	else {
-		g.addVertex(sink);
+		g->addVertex(*sink);
 		for (auto it : data) {
-			g.addEdge(*it.second,sink , 0);
+			g->addEdge(*it.second,*sink, 0);
 		}
 	}
-	return sink;
+	return *sink;
 }
 
-
+void GraphOperations::printGraph() {
+	std::unordered_map<std::string, Vertex*> data = g->getVertices();
+	if (data.empty()) {
+		std::cout << "Empty Graph Found";
+	}
+	else {
+		for (auto v : data) {
+			std::cout << v.second->getData().getId()  << "\t\t" << v.second->getDistance() << endl;
+		}
+	}
+}

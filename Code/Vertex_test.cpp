@@ -47,8 +47,9 @@ void vertexUnitTest1()
 	vg.addEdge(v2, v1);
 	vg.addEdge(v2, v3);
 	//Test graph operations
-	GraphOperations go1(g);
-	GraphOperations goh(hg);
-	GraphOperations gov(vg);
-	go1.performDFS();
+	GraphOperations go1(&g);
+	//GraphOperations goh(&hg);
+	//GraphOperations gov(&vg);
+	std::cout<<go1.getLongestPath()<<endl;
+	go1.printGraph();
 }

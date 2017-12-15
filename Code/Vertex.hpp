@@ -9,6 +9,7 @@ private:
 	Node data;
 	unordered_map<std::string,Edge*> edgeList;
 	//Data needed for graph operations
+	double distance;
 	int visitTime;
 	int finishTime;
 	bool isVisited;
@@ -28,8 +29,10 @@ public:
 	void setFinishTime(int time);
 	void setIsVisited(bool isVisited);
 	void setPrevious(Vertex* previous);
+	void setDistance(double distance);
 	int getVisitTime();
 	int getFinishTime();
 	bool getIsVisited();
 	Vertex* getPrevious();
+	double getDistance();
 };

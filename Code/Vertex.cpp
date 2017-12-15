@@ -8,7 +8,7 @@ Vertex::Vertex(Node & data)
 
 Node Vertex::getData()
 {
-	return data;
+	return this->data;
 }
 
 void Vertex::setData(Node & data)
@@ -50,6 +50,7 @@ unordered_map<std::string, Edge*>& Vertex::getEdgeList()
 
 void Vertex::init()
 {
+	this->distance = 0;
 	this->visitTime = 0;
 	this->finishTime = 0;
 	this->isVisited = false;
@@ -76,6 +77,11 @@ void Vertex::setPrevious(Vertex * previous)
 	this->previous = previous;
 }
 
+void Vertex::setDistance(double distance)
+{
+	this->distance = distance;
+}
+
 int Vertex::getVisitTime()
 {
 	return this->visitTime;
@@ -94,6 +100,11 @@ bool Vertex::getIsVisited()
 Vertex * Vertex::getPrevious()
 {
 	return this->previous;
+}
+
+double Vertex::getDistance()
+{
+	return this->distance;
 }
 
 

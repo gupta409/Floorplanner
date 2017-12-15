@@ -5,7 +5,7 @@ Edge::Edge() {
 	this->destination = nullptr;
 	this->weight = 0;
 }
-Edge::Edge(Vertex &source, Vertex &destination, int weight){
+Edge::Edge(Vertex &source, Vertex &destination, double weight){
 	this->source = &source;
 	this->destination = &destination;
 	this->weight = weight;

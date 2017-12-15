@@ -12,6 +12,6 @@ public:
 	void addVertex(Vertex &vertex);
 	Edge* findEdge(Vertex &source, Vertex &destination);
 	bool removeEdge(Vertex &source, Vertex &destination);
-	bool addEdge(Vertex &source, Vertex &destination, int weight);
+	bool addEdge(Vertex &source, Vertex &destination, double weight);
 	std::unordered_map<std::string, Vertex*>& getVertices();
 };

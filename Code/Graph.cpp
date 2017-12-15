@@ -1,5 +1,5 @@
 #include "Graph.hpp"
-
+#include <memory>
 Graph::Graph()
 {
 }
@@ -20,6 +20,7 @@ void Graph::addVertex(Vertex & vertex)
 {
 	this->vertices.insert(std::pair<std::string,Vertex*>(vertex.getData().getId(),&vertex));
 }
+
 
 Edge* Graph::findEdge(Vertex & source, Vertex & destination)
 {
@@ -45,7 +46,7 @@ bool Graph::removeEdge(Vertex & source, Vertex & destination)
 	}
 }
 
-bool Graph::addEdge(Vertex &source, Vertex &destination, int weight)
+bool Graph::addEdge(Vertex &source, Vertex &destination, double weight)
 {
 	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(source.getData().getId());
 	if (got == vertices.end()) {
