@@ -26,7 +26,7 @@ Edge* Graph::findEdge(Vertex & source, Vertex & destination)
 {
 	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(source.getData().getId());
 	if (got == vertices.end()) {
-		std::cout << "Source Vertex not found";
+		//std::cout << "Source Vertex not found";
 		return NULL;
 	}
 	else {
@@ -38,7 +38,7 @@ bool Graph::removeEdge(Vertex & source, Vertex & destination)
 {
 	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(source.getData().getId());
 	if (got == vertices.end()) {
-		std::cout << "Source Vertex not found";
+		//std::cout << "Source Vertex not found";
 		return false;
 	}
 	else {
@@ -55,7 +55,7 @@ bool Graph::addEdge(Vertex &source, Vertex &destination, double weight)
 {
 	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(source.getData().getId());
 	if (got == vertices.end()) {
-		std::cout << "Source Vertex not found";
+		//std::cout << "Source Vertex not found";
 		return false;
 	}
 	else {
@@ -72,7 +72,7 @@ std::unordered_map<std::string, Vertex*>& Graph::getVertices()
 void Graph::updateWeight(Vertex &source, double newWeight) {
 	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(source.getData().getId());
 	if (got == vertices.end()) {
-		std::cout << "UpdateWeight: Source Vertex not found";
+		//std::cout << "UpdateWeight: Source Vertex not found";
 	}
 	else {
 		for (auto it : got->second->getEdgeList()) {
@@ -85,7 +85,7 @@ Vertex * Graph::findVertex(string id)
 {
 	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(id);
 	if (got == vertices.end()) {
-		std::cout << "UpdateWeight: Source Vertex not found";
+		//std::cout << "UpdateWeight: Source Vertex not found";
 		return NULL;
 	}
 	else {

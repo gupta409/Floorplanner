@@ -26,7 +26,7 @@ Edge* Vertex::findEdge(Vertex & v)
 {
 	std::unordered_map<std::string, Edge*>::const_iterator got = edgeList.find(v.getData().getId());
 	if (got == edgeList.end()) {
-		std::cout << "Node not found";
+		//std::cout << "Node not found";
 		return NULL;
 	}
 	else {
