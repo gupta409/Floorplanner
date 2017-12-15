@@ -37,6 +37,13 @@ void unitTest() {
 	for(int i=0;i<1;i++){
 		int start = clock();
 		NonSlicingFloorplanner myPlanner(data);
+		/*for (int j = 0; j < 1000; j++) {
+			//cout << endl << myPlanner.computeCost(*myPlanner.verticalConstGraph) << endl;
+			myPlanner.move(10000000,100000000);
+		}*/
+			
+			
+		myPlanner.floorplan();
 		//double totalArea = myPlanner.computeCost(root);
 		//double blackArea = myPlanner.computeBlackArea(root);
 		//IOUtilites::getInstance().writeData(myPlanner.getNodes(),totalArea,blackArea);

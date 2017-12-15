@@ -3,9 +3,10 @@
 void GraphOperations::performDFS()
 {
 	int time = 0;
+	topologicalSort.clear();
 	std::unordered_map<std::string, Vertex*> data = g->getVertices();
 	if (data.empty()) {
-		std::cout << "Empty Graph Found";
+		//std::cout << "Empty Graph Found";
 		return;
 	}
 	else {
@@ -44,10 +45,12 @@ int GraphOperations::DFSVisit(Vertex &u, int time)
 
 double GraphOperations::getLongestPath()
 {
+	addSource();
+	addSink();
 	double distance = 0;
 	std::unordered_map<std::string, Vertex*> data = g->getVertices();
 	if (data.empty()) {
-		std::cout << "Empty Graph Found";
+		//std::cout << "Empty Graph Found";
 		return 0.0;
 	}
 	else {
@@ -65,16 +68,19 @@ double GraphOperations::getLongestPath()
 			}
 		}
 	}
+	distance = data.find("super_sink")->second->getDistance();
+	//removeSource();
+	//removeSink();
 	return distance;
 }
 GraphOperations::GraphOperations()
 {
+	cout << "Constructed";
+	this->g = new Graph();
 }
 GraphOperations::GraphOperations(Graph* g)
 {
 	this->g = g;
-	addSource();
-	addSink();
 }
 
 Vertex& GraphOperations::addSource()
@@ -82,7 +88,7 @@ Vertex& GraphOperations::addSource()
 	Vertex *source = new Vertex(*new Node("super_source"));
 	std::unordered_map<std::string, Vertex*> data = g->getVertices();
 	if (data.empty()) {
-		std::cout << "Empty Graph Found";
+		//std::cout << "Empty Graph Found";
 	}
 	else {
 		g->addVertex(*source);
@@ -97,7 +103,7 @@ Vertex& GraphOperations::addSink()
 	Vertex *sink = new Vertex(*new Node("super_sink"));
 	std::unordered_map<std::string, Vertex*> data = g->getVertices();
 	if (data.empty()) {
-		std::cout << "Empty Graph Found";
+		//std::cout << "Empty Graph Found";
 	}
 	else {
 		g->addVertex(*sink);
@@ -111,7 +117,7 @@ Vertex& GraphOperations::addSink()
 void GraphOperations::printGraph() {
 	std::unordered_map<std::string, Vertex*> data = g->getVertices();
 	if (data.empty()) {
-		std::cout << "Empty Graph Found";
+		//std::cout << "Empty Graph Found";
 	}
 	else {
 		for (auto v : data) {
@@ -122,4 +128,19 @@ void GraphOperations::printGraph() {
 
 Graph* GraphOperations::getGraph() {
 	return this->g;
+}
+
+void GraphOperations::setGraph(Graph * g)
+{
+	this->g = g;
+}
+void GraphOperations::removeSource() {
+	for (auto d : g->getVertices())
+		g->removeEdge(*g->findVertex("super_source"), *d.second);
+	g->getVertices().erase(g->getVertices().find("super_source"));
+}
+void GraphOperations::removeSink() {
+	for (auto d : g->getVertices())
+		g->removeEdge(*g->findVertex("super_sink"), *d.second);
+	g->getVertices().erase(g->getVertices().find("super_sink"));
 }

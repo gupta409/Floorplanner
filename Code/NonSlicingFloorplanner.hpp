@@ -10,15 +10,19 @@ private:
 	void swapBothSeq(std::string idA, std::string idB);
 	pair<vector<string>, vector<string>> seq_pair;
 protected:
-	GraphOperations horizontalConstGraph;
-	GraphOperations verticalConstGraph;
+	
 public:
+
+	GraphOperations *horizontalConstGraph;
+	GraphOperations *verticalConstGraph;
+
 	NonSlicingFloorplanner();
 	NonSlicingFloorplanner(list<Node>& nodes);
 	double computeCost(GraphOperations &graph);
-	void move(double temperature);
+	pair<double, bool>* move(double previousCost, double temperature);
 	void printSeqPair();
-	//void processCords();
+	unordered_map<std::string, Node*> * processCords();
+	void floorplan();
 	//double computeNetArea();
 	//double computeBlackArea();
 	//double computeCost();

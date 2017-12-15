@@ -15,5 +15,8 @@ public:
 	double getLongestPath();
 	void printGraph();
 	Graph* getGraph();
+	void setGraph(Graph* g);
+	void removeSource();
+	void removeSink();
 };
 

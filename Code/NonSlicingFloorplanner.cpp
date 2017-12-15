@@ -2,6 +2,8 @@
 #include "HorizontalGraph.hpp"
 #include "VerticalGraph.hpp"
 #include "RandomizeUtilites.hpp"
+#include "FloorplannerConstants.hpp"
+#include "IOUtilites.hpp"
 NonSlicingFloorplanner::NonSlicingFloorplanner()
 {
 	
@@ -9,8 +11,8 @@ NonSlicingFloorplanner::NonSlicingFloorplanner()
 
 NonSlicingFloorplanner::NonSlicingFloorplanner(list<Node>& nodes)
 {
-	HorizontalGraph horizontalConstGraph = *new HorizontalGraph();
-	VerticalGraph verticalConstGraph = *new VerticalGraph();
+	this->horizontalConstGraph = new GraphOperations(new HorizontalGraph());
+	this->verticalConstGraph = new GraphOperations(new VerticalGraph());
 	//Add all nodes as vertices in the constraint graphs
 	//Add random edges in the graph (left to right or bottom to top connection in this case)
 	for (std::list<Node>::iterator it = nodes.begin(); it != nodes.end();++it) {
@@ -19,8 +21,8 @@ NonSlicingFloorplanner::NonSlicingFloorplanner(list<Node>& nodes)
 		it->setOptimumSize(it->getSizeOptions().front());
 		Vertex *v1h = new Vertex(*it);
 		Vertex *v1v = new Vertex(*it);
-		horizontalConstGraph.addVertex(*v1h);
-		verticalConstGraph.addVertex(*v1v);
+		this->horizontalConstGraph->getGraph()->addVertex(*v1h);
+		this->verticalConstGraph->getGraph()->addVertex(*v1v);
 	}
 	int i = 0;
 	for (std::list<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
@@ -29,19 +31,10 @@ NonSlicingFloorplanner::NonSlicingFloorplanner(list<Node>& nodes)
 		std::advance(it1, i);
 		for (; it1 != nodes.end(); ++it1) {
 			if (it1 != nodes.end()) {
-				horizontalConstGraph.addEdge(*horizontalConstGraph.findVertex(it->getId()), *horizontalConstGraph.findVertex(it1->getId()));
+				this->horizontalConstGraph->getGraph()->addEdge(*this->horizontalConstGraph->getGraph()->findVertex(it->getId()), *this->horizontalConstGraph->getGraph()->findVertex(it1->getId()));
 			}
 		}
 	}
-	GraphOperations *g1 = new GraphOperations(&horizontalConstGraph);
-	GraphOperations *g2 = new GraphOperations(&verticalConstGraph);
-	this->horizontalConstGraph = *g1;
-	this->verticalConstGraph = *g2;
-	printSeqPair();
-	for (int i = 0; i < 10; i++) {
-		move(i);
-	}
-	
 }
 
 double NonSlicingFloorplanner::computeCost(GraphOperations & graph)
@@ -51,8 +44,8 @@ double NonSlicingFloorplanner::computeCost(GraphOperations & graph)
 
 void NonSlicingFloorplanner::rotateObject(std::string id, int option)
 {
-	Graph* gh = horizontalConstGraph.getGraph();
-	Graph* gv = verticalConstGraph.getGraph();
+	Graph* gh = horizontalConstGraph->getGraph();
+	Graph* gv = verticalConstGraph->getGraph();
 	Node ghNode = gh->findVertex(id)->getData();
 	Node gvNode = gv->findVertex(id)->getData();
 	if (ghNode.getSizeOptions().size() > option)
@@ -73,8 +66,8 @@ void NonSlicingFloorplanner::rotateObject(std::string id, int option)
 
 void NonSlicingFloorplanner::swapFirstSeq(std::string idA, std::string idB)
 {
-	Graph* gh = horizontalConstGraph.getGraph();
-	Graph* gv = verticalConstGraph.getGraph();
+	Graph* gh = horizontalConstGraph->getGraph();
+	Graph* gv = verticalConstGraph->getGraph();
 	Vertex* hA = gh->findVertex(idA);
 	Vertex* hB = gh->findVertex(idB);
 	Vertex* vA = gv->findVertex(idA);
@@ -94,29 +87,33 @@ void NonSlicingFloorplanner::swapFirstSeq(std::string idA, std::string idB)
 		vBA = gv->findEdge(*vB, *vA);
 	if (hAB != NULL) {
 		//Swap edges direction and add to vertical graph
+		//cout << "Zero" << endl;
 		gh->removeEdge(*hA, *hB);
 		gv->addEdge(*vB, *vA);
 	}
 	else {
 		if (vAB != NULL) {
 			//Swap edges direction and add to horizontal graph
+			//cout << "One" << endl;
 			gv->removeEdge(*vA, *vB);
 			gh->addEdge(*hB, *hA);
 		}
 		else {
 			if (hBA != NULL) {
 				//Swap edges direction and add to vertical graph
+				//cout << "Two" << endl;
 				gh->removeEdge(*hB, *hA);
 				gv->addEdge(*vA, *vB);
 			}
 			else {
 				if (vBA != NULL) {
 					//Swap edges direction and add to horizontal graph
+					//cout << "Three" << endl;
 					gv->removeEdge(*vB, *vA);
 					gh->addEdge(*hA, *hB);
 				}
 				else {
-					cout << "invalid state reached";
+					cout << "invalid state reached"<<endl;
 				}
 			}
 		}
@@ -125,8 +122,8 @@ void NonSlicingFloorplanner::swapFirstSeq(std::string idA, std::string idB)
 
 void NonSlicingFloorplanner::swapSecondSeq(std::string idA, std::string idB)
 {
-	Graph* gh = horizontalConstGraph.getGraph();
-	Graph* gv = verticalConstGraph.getGraph();
+	Graph* gh = horizontalConstGraph->getGraph();
+	Graph* gv = verticalConstGraph->getGraph();
 	Vertex* hA = gh->findVertex(idA);
 	Vertex* hB = gh->findVertex(idB);
 	Vertex* vA = gv->findVertex(idA);
@@ -156,7 +153,7 @@ void NonSlicingFloorplanner::swapSecondSeq(std::string idA, std::string idB)
 			gv->addEdge(*vB, *vA);
 		}
 		else {
-			cout << "Retrying";
+			//cout << "Retrying";
 			//Try swapping from A->B
 			//If edge between A->B in vertical graph exists
 			if (vAB != NULL) {
@@ -171,7 +168,7 @@ void NonSlicingFloorplanner::swapSecondSeq(std::string idA, std::string idB)
 					gv->addEdge(*vA, *vB);
 				}
 				else {
-					cout << "No connection state";
+					//cout << "No connection state";
 				}
 			}
 		}
@@ -183,10 +180,9 @@ void NonSlicingFloorplanner::swapBothSeq(std::string idA, std::string idB) {
 	this->swapSecondSeq(idA,idB);
 }
 
-void NonSlicingFloorplanner::move(double temperature)
+pair<double,bool>* NonSlicingFloorplanner::move(double previousCost, double temperature)
 {
 	int moveOption = RandomizeUtilites::getInstance().getRandom(1, 4);
-	cout << moveOption << endl;
 	//Randomizing Nodes on which move is being performed
 	int randomSeq = RandomizeUtilites::getInstance().getRandom(0, 1);
 	int randomId1i;
@@ -201,7 +197,7 @@ void NonSlicingFloorplanner::move(double temperature)
 		randomId1 = seq_pair.second[randomId1i];
 		randomId2 = seq_pair.second[randomId1i + 1];
 	}
-	int option = RandomizeUtilites::getInstance().getRandom(0, horizontalConstGraph.getGraph()->findVertex(randomId1)->getData().getSizeOptions().size()-1);
+	int option = RandomizeUtilites::getInstance().getRandom(0, horizontalConstGraph->getGraph()->findVertex(randomId1)->getData().getSizeOptions().size()-1);
 	std::string temp;
 	//Making move
 	switch (moveOption)
@@ -239,13 +235,15 @@ void NonSlicingFloorplanner::move(double temperature)
 		break;
 	}
 	//Calculating cost
-	double length = computeCost(this->horizontalConstGraph);
-	double height = computeCost(this->verticalConstGraph);
+	double length = computeCost(*horizontalConstGraph);
+	double height = computeCost(*verticalConstGraph);
 	double area = length * height;
-	cout <<length<<"\t"<<height<<"\t"<< area << endl;
-	bool isAccepted = acceptMove(area, temperature);
+	if (area <= 235578) {
+		cout <<endl << "ALERT" << area<<endl;
+	}
+	bool isAccepted = acceptMove(area-previousCost, temperature);
 	//Reverting move if not accepted
-	/*if (isAccepted == false) {
+	if (isAccepted == false) {
 		switch (moveOption)
 		{
 		case 1:
@@ -268,8 +266,8 @@ void NonSlicingFloorplanner::move(double temperature)
 			std::cout << "Invalid Move selected";
 			break;
 		}
-	}*/
-	printSeqPair();
+	}
+	return new std::pair<double,bool>(area,isAccepted);
 }
 
 void NonSlicingFloorplanner::printSeqPair()
@@ -282,4 +280,85 @@ void NonSlicingFloorplanner::printSeqPair()
 		cout << seq_pair.second[i] << ",";
 	}
 	cout << endl;
+}
+
+unordered_map<std::string, Node*> * NonSlicingFloorplanner::processCords() {
+	unordered_map<std::string, Node*> *nodes = new unordered_map<std::string, Node*> ;
+	for (auto g : horizontalConstGraph->getGraph()->getVertices()) {
+		g.second->getData().setLLCord(std::pair<double, double>(g.second->getDistance(), g.second->getData().getLLCord().second));
+		g.second->getData().setURCord(std::pair<double, double>(g.second->getDistance(), g.second->getData().getURCord().second));
+		nodes->insert(std::pair<std::string, Node*>(g.second->getData().getId(),&g.second->getData()));
+	}
+	for (auto g : verticalConstGraph->getGraph()->getVertices()) {
+		nodes->find(g.second->getData().getId())->second->setLLCord(std::pair<double, double>(g.second->getData().getLLCord().first,g.second->getDistance()));
+		nodes->find(g.second->getData().getId())->second->setURCord(std::pair<double, double>(g.second->getData().getLLCord().first,g.second->getDistance()));
+	}
+	return nodes;
+}
+
+
+//Simulated Annealing performed here
+void NonSlicingFloorplanner::floorplan() {
+	//string dumpData = "IterationNo,Temperature, Moves, CurrentCost, DeltaCost\n";
+	//string dumpData = "Temperature,%AcceptedMove\n";
+	int moveCounter = 0, acceptedMoveCounter = 0;
+	double temperature = FloorplannerConstants::getInstance().getStartTemp();
+	double movesPerStep = FloorplannerConstants::getInstance().getMovesPerStep();
+	Node* root = NULL;
+	double delCost, newCost, currentCost;
+	currentCost = computeCost(*horizontalConstGraph)*computeCost(*verticalConstGraph);
+	int temp = movesPerStep;
+	int MAX_MOVES = 1000;
+	int MIN_MOVES = 50;
+	std::cout << "Calculating -" << std::flush;
+	while (temperature > FloorplannerConstants::getInstance().getFreezingTemperature()) {
+		temp = movesPerStep;
+		for (int i = 1; i <= movesPerStep; i++) {
+			pair<double,bool> *moveResults = move(currentCost,temperature);
+			delCost = moveResults->first - currentCost;
+			
+			moveCounter++;
+			/*//Animation for console display
+			if (moveCounter % 5 == 0) {
+				std::cout << "\b\\" << std::flush;
+			}
+			if (moveCounter % 5 == 1) {
+				std::cout << "\b|" << std::flush;
+			}
+			if (moveCounter % 5 == 2) {
+				std::cout << "\b/" << std::flush;
+			}
+			if (moveCounter % 5 == 3) {
+				std::cout << "\b-" << std::flush;
+			}*/
+			//If move accepted
+			if (moveResults->second) {
+				//Log results
+				cout << moveResults->first << endl;
+				acceptedMoveCounter++;
+		//		dumpData = dumpData + std::to_string(moveCounter) + "," + std::to_string(temperature) + "," + std::to_string(movesPerStep) + "," + std::to_string(currentCost) + "," + std::to_string(delCost) + "\n";
+				//Lock changes
+				currentCost = moveResults->first;
+				//Dynamic change in MovesPerStep
+				if (delCost<0) {
+					if (movesPerStep < MAX_MOVES) {
+						movesPerStep = movesPerStep + 10;
+					}
+				}
+				if (delCost == 0) {
+					if (movesPerStep > MIN_MOVES) {
+						movesPerStep = movesPerStep - 10;
+					}
+				}
+			}
+			delete moveResults;
+		}
+		movesPerStep = temp;
+		temperature = coolDown(temperature);
+		movesPerStep = coolDownMoves(movesPerStep);
+	}
+	//Compute co-ordinates
+	//dumpData = dumpData + "\n Attempted Moves: " + std::to_string(moveCounter) + "\n Accepted Moves: " + std::to_string(acceptedMoveCounter);
+	//IOUtilites::getInstance().dumpData(dumpData);
+	return;
 }
