@@ -1,8 +1,5 @@
 #include "VerticalGraph.hpp"
 
-
-
-
 bool VerticalGraph::addEdge(Vertex & source, Vertex & destination)
 {
 	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(source.getData().getId());

@@ -16,7 +16,7 @@ Graph::Graph(vector<Vertex> &vertices)
 	}
 }
 
-void Graph::addVertex(Vertex & vertex)
+void Graph::addVertex(Vertex& vertex)
 {
 	this->vertices.insert(std::pair<std::string,Vertex*>(vertex.getData().getId(),&vertex));
 }
@@ -46,6 +46,11 @@ bool Graph::removeEdge(Vertex & source, Vertex & destination)
 	}
 }
 
+bool Graph::addEdge(Vertex & source, Vertex & destination)
+{
+	return false;
+}
+
 bool Graph::addEdge(Vertex &source, Vertex &destination, double weight)
 {
 	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(source.getData().getId());
@@ -62,4 +67,28 @@ bool Graph::addEdge(Vertex &source, Vertex &destination, double weight)
 std::unordered_map<std::string, Vertex*>& Graph::getVertices()
 {
 	return this->vertices;
+}
+
+void Graph::updateWeight(Vertex &source, double newWeight) {
+	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(source.getData().getId());
+	if (got == vertices.end()) {
+		std::cout << "UpdateWeight: Source Vertex not found";
+	}
+	else {
+		for (auto it : got->second->getEdgeList()) {
+			it.second->setWeight(newWeight);
+		}
+	}
+}
+
+Vertex * Graph::findVertex(string id)
+{
+	std::unordered_map<std::string, Vertex*>::const_iterator got = vertices.find(id);
+	if (got == vertices.end()) {
+		std::cout << "UpdateWeight: Source Vertex not found";
+		return NULL;
+	}
+	else {
+		return got->second;
+	}
 }

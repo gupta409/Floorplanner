@@ -15,8 +15,8 @@ private:
 	bool isVisited;
 	Vertex* previous;
 public:
-	Vertex(Node &data);
-	Node getData();
+	Vertex(Node data);
+	Node& getData();
 	void setData(Node &data);
 	void addEdge(Vertex &destination, int weight);
 	Edge* findEdge(Vertex &v);

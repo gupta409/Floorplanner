@@ -82,6 +82,10 @@ Node* Floorplanner::sizeNodes(Node& nodeA, Node& nodeB, int cutType) {
 	}
 	return parent;
 }
+Floorplanner::Floorplanner()
+{
+
+}
 //Converts polish expression to tree and computes sizing and area while converting. Returns: root node of the tree
 Node* Floorplanner::polishToTree(const vector<string>& experssion) {
 	Node* top;

@@ -8,9 +8,9 @@ using namespace std;
 void floorplannerUnitTest();
 class Floorplanner {
 private:
-	unordered_map<string,Node*> nodes;
 	
 protected:
+	unordered_map<string, Node*> nodes;
 	Node* sizeNodes(Node &nodeA, Node &nodeB, int cutType);
 	void cleanupNodes();
 	static bool acceptMove(double deltaCost, double temperature);
@@ -18,15 +18,16 @@ protected:
 	double coolDownMoves(double movesPerStep);
 	void assignOptimum(Node* root);
 public:
-	Node* polishToTree(const vector<string>& experssion);
+	Floorplanner();
 	Floorplanner(list<Node>& nodes);
+	Node* polishToTree(const vector<string>& experssion);
 	vector<string> generateInitialExpression();
 	void processCords(Node * root);
 	static vector<string> move(vector<string> currentPolish);
 	Node* floorplan();
 	void printNodes();
 	unordered_map<string, Node*> getNodes();
-	double computeNetArea();
+	virtual double computeNetArea();
 	double computeBlackArea(Node* root);
 	double computeCost(Node* root);
 };

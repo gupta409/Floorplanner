@@ -1,12 +1,13 @@
 #include "Vertex.hpp"
 
-Vertex::Vertex(Node & data)
+
+Vertex::Vertex(Node data)
 {
 	this->data = data;
 }
 
 
-Node Vertex::getData()
+Node& Vertex::getData()
 {
 	return this->data;
 }

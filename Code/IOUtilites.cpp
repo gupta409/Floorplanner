@@ -34,7 +34,8 @@ void IOUtilites::closeConnection() {
 IOUtilites::IOUtilites() {
 	//Get input file name
 	std::cout<<"Enter the input file name: ";
-	std::cin>>inputFile;
+	//std::cin>>inputFile;
+	inputFile = "n10hard.blocks";
 	string temp = "";
 	std::regex fileName("[\\w\\d]+");
 	std::smatch match;

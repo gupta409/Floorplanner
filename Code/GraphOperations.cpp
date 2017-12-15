@@ -67,7 +67,9 @@ double GraphOperations::getLongestPath()
 	}
 	return distance;
 }
-
+GraphOperations::GraphOperations()
+{
+}
 GraphOperations::GraphOperations(Graph* g)
 {
 	this->g = g;
@@ -85,7 +87,7 @@ Vertex& GraphOperations::addSource()
 	else {
 		g->addVertex(*source);
 		for (auto it : data) {
-			g->addEdge(*source, *it.second, 0);
+			g->addEdge(*source, *it.second,0);
 		}
 	}
 	return *source;
@@ -100,7 +102,7 @@ Vertex& GraphOperations::addSink()
 	else {
 		g->addVertex(*sink);
 		for (auto it : data) {
-			g->addEdge(*it.second,*sink, 0);
+			g->addEdge(*it.second,*sink);
 		}
 	}
 	return *sink;
@@ -116,4 +118,8 @@ void GraphOperations::printGraph() {
 			std::cout << v.second->getData().getId()  << "\t\t" << v.second->getDistance() << endl;
 		}
 	}
+}
+
+Graph* GraphOperations::getGraph() {
+	return this->g;
 }

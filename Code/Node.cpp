@@ -117,20 +117,7 @@ bool Node::isNodeType() const {
 }
 
 const Size Node::getOptimumSize() const {
-	if (this->parent == NULL) {
-		double minArea = DBL_MAX;
-		Size minSize;
-		for (auto it : sizeOptions) {
-			if (minArea > it.getLength()*it.getWidth()) {
-				minArea = it.getLength()*it.getWidth();
-				minSize = it;
-			}
-		}
-		return minSize;
-	}
-	else {
-		return this->optimumSize;
-	}
+	return this->optimumSize;
 }
 
 void Node::setOptimumSize(Size& optimumSize) {
