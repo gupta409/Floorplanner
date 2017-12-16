@@ -6,7 +6,7 @@
 #include "IOUtilites.hpp"
 NonSlicingFloorplanner::NonSlicingFloorplanner()
 {
-	
+
 }
 
 NonSlicingFloorplanner::NonSlicingFloorplanner(list<Node>& nodes)
@@ -182,7 +182,7 @@ void NonSlicingFloorplanner::swapBothSeq(std::string idA, std::string idB) {
 
 pair<double,bool>* NonSlicingFloorplanner::move(double previousCost, double temperature)
 {
-	int moveOption = RandomizeUtilites::getInstance().getRandom(1, 4);
+	int moveOption = RandomizeUtilites::getInstance().getRandom(2, 4);
 	//Randomizing Nodes on which move is being performed
 	int randomSeq = RandomizeUtilites::getInstance().getRandom(0, 1);
 	int randomId1i;
@@ -238,7 +238,7 @@ pair<double,bool>* NonSlicingFloorplanner::move(double previousCost, double temp
 	double length = computeCost(*horizontalConstGraph);
 	double height = computeCost(*verticalConstGraph);
 	double area = length * height;
-	if (area <= 235578) {
+	if (area <= 221679) {
 		cout <<endl << "ALERT" << area<<endl;
 	}
 	bool isAccepted = acceptMove(area-previousCost, temperature);
@@ -325,7 +325,7 @@ void NonSlicingFloorplanner::floorplan() {
 		for (int i = 1; i <= movesPerStep; i++) {
 			pair<double,bool> *moveResults = move(currentCost,temperature);
 			delCost = moveResults->first - currentCost;
-			
+
 			moveCounter++;
 			/*//Animation for console display
 			if (moveCounter % 5 == 0) {
@@ -366,36 +366,36 @@ void NonSlicingFloorplanner::floorplan() {
 		temperature = coolDown(temperature);
 		movesPerStep = coolDownMoves(movesPerStep);
 	}
-	//Compute co-ordinates
+	//Compute Final areas
+	this->usedArea = currentCost;
+	this->netArea = 0;
+	for (auto g : horizontalConstGraph->getGraph()->getVertices()) {
+		this->netArea = this->netArea + g.second->getData().getOptimumSize().getLength()*g.second->getData().getOptimumSize().getWidth();
+	}
+	this->blackArea = usedArea - netArea;
 	//dumpData = dumpData + "\n Attempted Moves: " + std::to_string(moveCounter) + "\n Accepted Moves: " + std::to_string(acceptedMoveCounter);
 	//IOUtilites::getInstance().dumpData(dumpData);
+	//Finding the co-ordinates
+	unordered_map<std::string, Node*> *nodes = new unordered_map<std::string, Node*> ;
+	for(auto g: horizontalConstGraph->getGraph()->getVertices()){
+		Node* newNode = new Node(g.second->getData().getId());
+		newNode->setLLCord(g.second->getData().getLLCord());
+		newNode->setURCord(g.second->getData().getURCord());
+		if (newNode->getId().compare("super_source") == 0)
+			continue;
+		if (newNode->getId().compare("super_sink") == 0)
+			continue;
+		nodes->insert(std::pair<std::string, Node*>(newNode->getId(), newNode));
+	}
 	return;
 }
 
-double NonSlicingFloorplanner::computeBlackArea()
-{
-	double usedArea = this->computeUsedArea();
-	double netArea = this->computeNetAreaNew();
-	double blackarea = usedArea - netArea;
-	cout << "NET AREA\t" << netArea << endl;
-	cout << "Final Used\t" << usedArea << endl;
-	cout << "Final Black\t" << blackarea << endl;
-	return blackarea;
+double NonSlicingFloorplanner::getBlackArea(){
+	return this->blackArea;
 }
-
-double NonSlicingFloorplanner::computeUsedArea()
-{
-	double cost = computeCost(*horizontalConstGraph)*computeCost(*verticalConstGraph);
-	cout << "Final Cost\t" << cost <<endl;
-	return cost;
+double NonSlicingFloorplanner::getUsedArea(){
+	return this->usedArea;
 }
-
-double NonSlicingFloorplanner::computeNetAreaNew() {
-	unordered_map<std::string, Node*> *nodes = new unordered_map<std::string, Node*>;
-	double netArea = 0;
-	horizontalConstGraph->processCordsH();
-	for (auto g : horizontalConstGraph->getGraph()->getVertices()) {
-		netArea = netArea + g.second->getData().getOptimumSize().getLength()*g.second->getData().getOptimumSize().getWidth();
-	}
-	return netArea;
+unordered_map<std::string, Node*> * NonSlicingFloorplanner::getFinalData(){
+	return finalData;
 }

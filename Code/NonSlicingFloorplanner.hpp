@@ -9,8 +9,12 @@ private:
 	void swapSecondSeq(std::string idA, std::string idB);
 	void swapBothSeq(std::string idA, std::string idB);
 	pair<vector<string>, vector<string>> seq_pair;
+	double blackArea;
+	double usedArea;
+	double netArea;
+	unordered_map<std::string, Node*> * finalData;
 protected:
-	
+
 public:
 
 	GraphOperations *horizontalConstGraph;
@@ -23,8 +27,7 @@ public:
 	void printSeqPair();
 	unordered_map<std::string, Node*> * processCords();
 	void floorplan();
-	double computeBlackArea();
-	double computeUsedArea();
-	double computeNetAreaNew();
+	double getBlackArea();
+	double getUsedArea();
+	unordered_map<std::string, Node*> * getFinalData();
 };
-

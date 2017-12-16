@@ -38,9 +38,9 @@ void unitTest() {
 		int start = clock();
 		NonSlicingFloorplanner myPlanner(data);
 		myPlanner.floorplan();
-		double totalArea = myPlanner.computeUsedArea();
-		double blackArea = myPlanner.computeBlackArea();
-		IOUtilites::getInstance().writeData(*myPlanner.processCords(),totalArea,blackArea);
+		double totalArea = myPlanner.getUsedArea();
+		double blackArea = myPlanner.getBlackArea();
+		IOUtilites::getInstance().writeData(*myPlanner.getFinalData(),totalArea,blackArea);
 		//double runtime = (clock() - start) / double(CLOCKS_PER_SEC);
 		//double percent = 100*blackArea/totalArea;
 		/*output << to_string(runtime) << "," << to_string(percent) << endl;
