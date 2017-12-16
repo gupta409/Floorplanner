@@ -393,6 +393,7 @@ void NonSlicingFloorplanner::floorplan() {
 			continue;
 		nodes->insert(std::pair<std::string, Node*>(newNode->getId(), newNode));
 	}
+	finalData = nodes;
 	return;
 }
 
