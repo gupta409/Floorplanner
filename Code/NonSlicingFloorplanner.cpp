@@ -182,7 +182,7 @@ void NonSlicingFloorplanner::swapBothSeq(std::string idA, std::string idB) {
 
 pair<double,bool>* NonSlicingFloorplanner::move(double previousCost, double temperature)
 {
-	int moveOption = RandomizeUtilites::getInstance().getRandom(2, 4);
+	int moveOption = 4;//RandomizeUtilites::getInstance().getRandom(1, 4);
 	//Randomizing Nodes on which move is being performed
 	int randomSeq = RandomizeUtilites::getInstance().getRandom(0, 1);
 	int randomId1i;
