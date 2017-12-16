@@ -377,15 +377,15 @@ void NonSlicingFloorplanner::floorplan() {
 	//IOUtilites::getInstance().dumpData(dumpData);
 	//Finding the co-ordinates
 	unordered_map<std::string, Node*> *nodes = new unordered_map<std::string, Node*> ;
-	for(auto g: horizontalConstGraph->getGraph()->getVertices()){
-		Vertex *v = verticalConstGraph->getGraph()->findVertex(g.second->getData().getId());
-		double xD = g.second->getDistance();
+	for(auto v: verticalConstGraph->getTopologicalSort()){
+		Vertex* g = horizontalConstGraph->getGraph()->findVertex(v->getData().getId());
+		double xD = g->getDistance();
 		double yD = v->getDistance();
-		Node* newNode = new Node(g.second->getData().getId());
+		Node* newNode = new Node(g->getData().getId());
 		//Add lower left and upper rigth co-ordinates
 		newNode->setLLCord(std::pair<double,double>(xD,yD));
-		double width = g.second->getData().getOptimumSize().getWidth();
-		double height = g.second->getData().getOptimumSize().getLength();
+		double width = g->getData().getOptimumSize().getWidth();
+		double height = g->getData().getOptimumSize().getLength();
 		newNode->setURCord(std::pair<double, double>(xD+width, yD+height));
 		if (newNode->getId().compare("super_source") == 0)
 			continue;
