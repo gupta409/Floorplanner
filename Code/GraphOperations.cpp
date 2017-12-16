@@ -69,8 +69,6 @@ double GraphOperations::getLongestPath()
 		}
 	}
 	distance = data.find("super_sink")->second->getDistance();
-	//removeSource();
-	//removeSink();
 	return distance;
 }
 GraphOperations::GraphOperations()
@@ -143,4 +141,60 @@ void GraphOperations::removeSink() {
 	for (auto d : g->getVertices())
 		g->removeEdge(*g->findVertex("super_sink"), *d.second);
 	g->getVertices().erase(g->getVertices().find("super_sink"));
+}
+
+vector<Vertex*> GraphOperations::getTopologicalSort()
+{
+	return this->topologicalSort;
+}
+void GraphOperations::processCordsH() {
+	double distance = 0;
+	std::unordered_map<std::string, Vertex*> data = g->getVertices();
+	if (data.empty()) {
+		//std::cout << "Empty Graph Found";
+		return;
+	}
+	else {
+		performDFS();
+		for (auto it : data) {
+			it.second->init();
+		}
+		for (int i = topologicalSort.size() - 1; i >= 0; i--) {
+			std::unordered_map<std::string, Edge*> edgeList = topologicalSort.at(i)->getEdgeList();
+			for (auto e : edgeList) {
+				if (e.second->getDestination()->getDistance() < topologicalSort.at(i)->getDistance() + e.second->getWeight()) {
+					distance = topologicalSort.at(i)->getDistance() + e.second->getWeight();
+					e.second->getDestination()->setDistance(distance);
+					e.second->getDestination()->getData().setLLCord(std::pair<double,double>(distance,e.second->getDestination()->getData().getLLCord().second));
+					e.second->getDestination()->getData().setURCord(std::pair<double, double>(distance+ e.second->getDestination()->getData().getOptimumSize().getWidth(), e.second->getDestination()->getData().getURCord().second));
+					//e.second->getDestination()->
+				}
+			}
+		}
+	}
+}
+void GraphOperations::processCordsV() {
+	double distance = 0;
+	std::unordered_map<std::string, Vertex*> data = g->getVertices();
+	if (data.empty()) {
+		//std::cout << "Empty Graph Found";
+		return;
+	}
+	else {
+		performDFS();
+		for (auto it : data) {
+			it.second->init();
+		}
+		for (int i = topologicalSort.size() - 1; i >= 0; i--) {
+			std::unordered_map<std::string, Edge*> edgeList = topologicalSort.at(i)->getEdgeList();
+			for (auto e : edgeList) {
+				if (e.second->getDestination()->getDistance() < topologicalSort.at(i)->getDistance() + e.second->getWeight()) {
+					distance = topologicalSort.at(i)->getDistance() + e.second->getWeight();
+					e.second->getDestination()->setDistance(distance);
+					e.second->getDestination()->getData().setLLCord(std::pair<double, double>(e.second->getDestination()->getData().getLLCord().first,distance));
+					e.second->getDestination()->getData().setURCord(std::pair<double, double>(e.second->getDestination()->getData().getURCord().first, distance+ e.second->getDestination()->getData().getOptimumSize().getLength()));
+				}
+			}
+		}
+	}
 }

@@ -13,10 +13,13 @@ public:
 	Vertex& addSink();
 	void performDFS();
 	double getLongestPath();
-	void printGraph();
-	Graph* getGraph();
+	void printGraph();	
 	void setGraph(Graph* g);
 	void removeSource();
 	void removeSink();
+	Graph* getGraph();
+	vector<Vertex*> getTopologicalSort();
+	void processCordsH();
+	void processCordsV();
 };
 

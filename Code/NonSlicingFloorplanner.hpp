@@ -23,8 +23,8 @@ public:
 	void printSeqPair();
 	unordered_map<std::string, Node*> * processCords();
 	void floorplan();
-	//double computeNetArea();
-	//double computeBlackArea();
-	//double computeCost();
+	double computeBlackArea();
+	double computeUsedArea();
+	double computeNetAreaNew();
 };
 

@@ -284,14 +284,23 @@ void NonSlicingFloorplanner::printSeqPair()
 
 unordered_map<std::string, Node*> * NonSlicingFloorplanner::processCords() {
 	unordered_map<std::string, Node*> *nodes = new unordered_map<std::string, Node*> ;
+	horizontalConstGraph->processCordsH();
 	for (auto g : horizontalConstGraph->getGraph()->getVertices()) {
-		g.second->getData().setLLCord(std::pair<double, double>(g.second->getDistance(), g.second->getData().getLLCord().second));
-		g.second->getData().setURCord(std::pair<double, double>(g.second->getDistance(), g.second->getData().getURCord().second));
-		nodes->insert(std::pair<std::string, Node*>(g.second->getData().getId(),&g.second->getData()));
+		Node* newNode = new Node(g.second->getData().getId());
+		newNode->setLLCord(g.second->getData().getLLCord());
+		newNode->setURCord(g.second->getData().getURCord());
+		if (newNode->getId().compare("super_source") == 0)
+			continue;
+		if (newNode->getId().compare("super_sink") == 0)
+			continue;
+		nodes->insert(std::pair<std::string, Node*>(newNode->getId(), newNode));
 	}
+	verticalConstGraph->processCordsV();
 	for (auto g : verticalConstGraph->getGraph()->getVertices()) {
-		nodes->find(g.second->getData().getId())->second->setLLCord(std::pair<double, double>(g.second->getData().getLLCord().first,g.second->getDistance()));
-		nodes->find(g.second->getData().getId())->second->setURCord(std::pair<double, double>(g.second->getData().getLLCord().first,g.second->getDistance()));
+		if (nodes->find(g.second->getData().getId()) != nodes->end()) {
+			nodes->find(g.second->getData().getId())->second->setLLCord(std::pair<double, double>(nodes->find(g.second->getData().getId())->second->getLLCord().first, g.second->getData().getLLCord().second));
+			nodes->find(g.second->getData().getId())->second->setURCord(std::pair<double, double>(nodes->find(g.second->getData().getId())->second->getURCord().first, g.second->getData().getURCord().second));
+		}
 	}
 	return nodes;
 }
@@ -361,4 +370,32 @@ void NonSlicingFloorplanner::floorplan() {
 	//dumpData = dumpData + "\n Attempted Moves: " + std::to_string(moveCounter) + "\n Accepted Moves: " + std::to_string(acceptedMoveCounter);
 	//IOUtilites::getInstance().dumpData(dumpData);
 	return;
+}
+
+double NonSlicingFloorplanner::computeBlackArea()
+{
+	double usedArea = this->computeUsedArea();
+	double netArea = this->computeNetAreaNew();
+	double blackarea = usedArea - netArea;
+	cout << "NET AREA\t" << netArea << endl;
+	cout << "Final Used\t" << usedArea << endl;
+	cout << "Final Black\t" << blackarea << endl;
+	return blackarea;
+}
+
+double NonSlicingFloorplanner::computeUsedArea()
+{
+	double cost = computeCost(*horizontalConstGraph)*computeCost(*verticalConstGraph);
+	cout << "Final Cost\t" << cost <<endl;
+	return cost;
+}
+
+double NonSlicingFloorplanner::computeNetAreaNew() {
+	unordered_map<std::string, Node*> *nodes = new unordered_map<std::string, Node*>;
+	double netArea = 0;
+	horizontalConstGraph->processCordsH();
+	for (auto g : horizontalConstGraph->getGraph()->getVertices()) {
+		netArea = netArea + g.second->getData().getOptimumSize().getLength()*g.second->getData().getOptimumSize().getWidth();
+	}
+	return netArea;
 }

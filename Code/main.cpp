@@ -37,16 +37,10 @@ void unitTest() {
 	for(int i=0;i<1;i++){
 		int start = clock();
 		NonSlicingFloorplanner myPlanner(data);
-		/*for (int j = 0; j < 1000; j++) {
-			//cout << endl << myPlanner.computeCost(*myPlanner.verticalConstGraph) << endl;
-			myPlanner.move(10000000,100000000);
-		}*/
-			
-			
 		myPlanner.floorplan();
-		//double totalArea = myPlanner.computeCost(root);
-		//double blackArea = myPlanner.computeBlackArea(root);
-		//IOUtilites::getInstance().writeData(myPlanner.getNodes(),totalArea,blackArea);
+		double totalArea = myPlanner.computeUsedArea();
+		double blackArea = myPlanner.computeBlackArea();
+		IOUtilites::getInstance().writeData(*myPlanner.processCords(),totalArea,blackArea);
 		//double runtime = (clock() - start) / double(CLOCKS_PER_SEC);
 		//double percent = 100*blackArea/totalArea;
 		/*output << to_string(runtime) << "," << to_string(percent) << endl;
