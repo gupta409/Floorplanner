@@ -1,0 +1,13 @@
+language: cpp
+compiler:
+- g++
+os:
+- linux
+branches:
+  only:
+  - master
+script:
+ - cd Code
+ - make
+notifications:
+  email: false
