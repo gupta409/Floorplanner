@@ -2,18 +2,18 @@
 ------------------------------------------------------------------------------------
 SIMULATED ANNEALING BASED FLOORPLANNER
 ------------------------------------------------------------------------------------
-'''text
+```text
 ___________.__                             .__                                     
 \_   _____/|  |   ____   _________________ |  | _____    ____   ____   ___________ 
  |    __)  |  |  /  _ \ /  _ \_  __ \____ \|  | \__  \  /    \ /    \_/ __ \_  __ \
  |     \   |  |_(  <_> |  <_> )  | \/  |_> >  |__/ __ \|   |  \   |  \  ___/|  | \/
  \___  /   |____/\____/ \____/|__|  |   __/|____(____  /___|  /___|  /\___  >__|   
      \/                             |__|             \/     \/     \/     \/       
-'''text
+```
 ------------------------------------------------------------------------------------
 Folder Structure
 ------------------------------------------------------------------------------------
-'''text
+```text
 Root:
 	Code:
 		Makefile
@@ -50,7 +50,7 @@ Root:
 		......
 		......
 		n300soft
-'''text
+```
 ------------------------------------------------------------------------------------
 How to Run
 ------------------------------------------------------------------------------------
@@ -70,18 +70,20 @@ How to Run
 ------------------------------------------------------------------------------------
 Details of Individual "Code" Files
 ------------------------------------------------------------------------------------
-Makefile:			This file is the main file being used for compiling and creating the executable of the program.
-constants.cfg:	 	This is an optional input file to the program. It is used to override default constants.
-main.cpp:			C++ 11 file with the main call
-Floorplanner.cpp:	Floorplanner class responsible for performing all floorplan related operations
-Node.cpp:			Base entity class for storing the Node(Block) related properties as well as methods
-Size.cpp:			Base entity class to store size information (length X width)
-FloorplannerConstants.cpp: Class providing all simulated annealing constants to the floorplanner
-IOUtilities.cpp:		Utility class for all IO operations
-PolishUtilities.cpp:	Utility class for all Polish Expression Related functions
-RandomizeUtilities.cpp:	Utility class for all random number generator and distributor related operations
-<Name>_test.cpp:	Various C++ files to test individual classes and their operations.
-<Name>.hpp:			Header files for relavent classes.
+|File  	|Use   	|
+|---	|---	|
+|Makefile|This file is the main file being used for compiling and creating the executable of the program.|
+|constants.cfg|	 	This is an optional input file to the program. It is used to override default constants.|
+|main.cpp|			C++ 11 file with the main call.|
+|Floorplanner.cpp|	Floorplanner class responsible for performing all floorplan related operations.|
+|Node.cpp|			Base entity class for storing the Node(Block) related properties as well as methods.|
+|Size.cpp|			Base entity class to store size information (length X width).|
+|FloorplannerConstants.cpp| Class providing all simulated annealing constants to the floorplanner.|
+|IOUtilities.cpp|		Utility class for all IO operations.|
+|PolishUtilities.cpp|	Utility class for all Polish Expression Related functions.|
+|RandomizeUtilities.cpp|	Utility class for all random number generator and distributor related operations.|
+|<Name>_test.cpp|	Various C++ files to test individual classes and their operations.|
+|<Name>.hpp|			Header files for relavent classes.|
 ------------------------------------------------------------------------------------
 Details of TestFolder
 ------------------------------------------------------------------------------------
