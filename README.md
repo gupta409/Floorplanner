@@ -87,7 +87,7 @@ Details of Individual "Code" Files
 ------------------------------------------------------------------------------------
 Details of TestFolder
 ------------------------------------------------------------------------------------
-Contains readymade execuatble to and benchmark files to benchmark the program by running 100 times and giving average runtime and average % black area.
+Contains execuatble to and benchmark files to benchmark the program by running 100 times and giving average runtime and average % black area.
 All output data is stored in same folders as listed above.
 HOW TO USE:
 Simply call ./parser
