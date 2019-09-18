@@ -1,4 +1,8 @@
-for file in ../TestFolder/*/*.blocks; do ./parser < $file; done
+for file in ../TestFolder/*/*.blocks; 
+do 
+  $file > foo.txt
+  ./parser < foo.txt; 
+done
 #./parser < ../TestFolder/n10hard/n10hard.blocks
 #./parser < ../TestFolder/n10soft/n10soft.blocks
 #./parser < ../TestFolder/n30hard/n30hard.blocks
