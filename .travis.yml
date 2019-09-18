@@ -15,6 +15,7 @@ script:
  # cppcheck
  - cppcheck --quiet --error-exitcode=1 .
  # testing
+ - pwd
  - bash testFile_ci.sh
 notifications:
   email: false
