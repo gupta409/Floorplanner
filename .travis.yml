@@ -15,6 +15,6 @@ script:
  # cppcheck
  - cppcheck --quiet --error-exitcode=1 .
  # testing
- - ./parser < testFile_ci.txt
+ - bash testFile_ci.sh
 notifications:
   email: false
