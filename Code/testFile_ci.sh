@@ -1,7 +1,6 @@
 for file in ../TestFolder/*/*.blocks; 
 do 
-  $file > foo.txt
-  ./parser < foo.txt; 
+  ./parser < "$file"; 
 done
 #./parser < ../TestFolder/n10hard/n10hard.blocks
 #./parser < ../TestFolder/n10soft/n10soft.blocks
