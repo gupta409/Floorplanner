@@ -3,11 +3,16 @@ compiler:
 - g++
 os:
 - linux
+install:
+ # cppcheck
+ - sudo apt-get install -qq cppcheck 
 branches:
   only:
   - master
 script:
  - cd Code
  - make
+ # cppcheck
+ - cppcheck --quiet --error-exitcode=1 .
 notifications:
   email: false
