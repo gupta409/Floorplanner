@@ -14,5 +14,7 @@ script:
  - make
  # cppcheck
  - cppcheck --quiet --error-exitcode=1 .
+ # testing
+ - ./parser 
 notifications:
   email: false
