@@ -87,9 +87,11 @@ Details of Individual "Code" Files
 ------------------------------------------------------------------------------------
 Details of TestFolder
 ------------------------------------------------------------------------------------
-Contains execuatble to and benchmark files to benchmark the program by running 100 times and giving average runtime and average % black area.
-All output data is stored in same folders as listed above.
-HOW TO USE:
+*Contains execuatble to and benchmark files to benchmark the program by running 100 times and giving average runtime and average % black area.
+	
+*All output data is stored in same folders as listed above.
+
+##HOW TO USE:
 Simply call ./parser
 No requirement of giving indidual file name
 Working can be overriden by use of constraints.cfg file as listed above.
